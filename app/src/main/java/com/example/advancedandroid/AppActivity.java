@@ -29,7 +29,7 @@ public class AppActivity extends AppCompatActivity {
 
 
 
-        // make it invisible only if no contacts
+        // make it visible only if no contacts
         View EmptyIndicator = findViewById(R.id.tutorial);
         //  EmptyIndicator.setVisibility(View.INVISIBLE);
         // will later use it.
