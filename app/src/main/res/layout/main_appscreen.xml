@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".AppActivity"
     android:orientation="vertical"
     android:id="@+id/cont"
     >
@@ -72,6 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:visibility="invisible"
         android:layout_toLeftOf="@+id/move_to_contactlist_fab"
         android:padding="10dp"
         android:text="Your contact list seems to be empty. Click there to add contact --->"

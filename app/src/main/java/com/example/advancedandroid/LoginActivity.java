@@ -14,9 +14,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.advancedandroid.api.RetrofitClient;
-import com.example.advancedandroid.models.Results;
+import com.example.advancedandroid.models.Contact;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -58,12 +57,12 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void getUserList() {
-        Call<List<Results>> call = RetrofitClient.getInstance().getMyApi().getUsers();
-        call.enqueue(new Callback<List<Results>>() {
+        Call<List<Contact>> call = RetrofitClient.getInstance().getMyApi().getUsers();
+        call.enqueue(new Callback<List<Contact>>() {
             @Override
-            public void onResponse(Call<List<Results>> call, Response<List<Results>> response) {
+            public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
 
-                List<Results> Users = response.body();
+                List<Contact> Users = response.body();
                 String[] oneHeroes = new String[Users.size()];
 
                 for (int i = 0; i < Users.size(); i++) {
@@ -74,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Results>> call, Throwable t) {
+            public void onFailure(Call<List<Contact>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
 
             }
