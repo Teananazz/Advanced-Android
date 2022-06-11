@@ -24,8 +24,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
+
     ListView superListView;
-   private String token = null;
+   private String Token = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
         String pass = PassWord.getText().toString();
 
         LoginAttempt(user, pass);
+
+        // if token is not null then login is successful.
 
     }
 
@@ -86,19 +89,19 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
 
-                String Token = response.body();
+                 Token = response.body();
 
                 // failed login
                 if(Token == null) {
-                    // do something later
-                } else {
 
-                    token = Token;
-
+                    // TODO: need to skip next few lines and also show a screen or something when happens.
                 }
 
+                Intent main_screen = new Intent(getApplicationContext(), AppActivity.class);
+                main_screen.putExtra("Token", Token);
+                main_screen.putExtra("User", user);
+                startActivity(main_screen);
 
-               // superListView.setAdapter(new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, oneHeroes));
             }
 
             @Override
@@ -108,8 +111,6 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         });
-
-
 
     }
 }

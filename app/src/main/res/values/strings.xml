@@ -6,4 +6,8 @@
     <string name="register_button">Register</string>
     <string name="password_validation">Password Validation</string>
     <string name="display_name">Display Name</string>
+    <string name="time_received">01:00 pm</string>
+    <string name="sender_time">01:30 pm</string>
+    <string name="receiver_message">message</string>
+    <string name="sender_message">msg</string>
 </resources>
