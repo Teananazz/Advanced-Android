@@ -76,32 +76,43 @@ public class AppActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Contact>> call , Response<List<Contact>> response) {
 
-                Current_Contacts = response.body();
 
-                 if(Current_Contacts != null) {
-                     // we start caring about recycler view when there is contacts to show.
-                     if(RecyclerView == null) {
-                         RecyclerView = findViewById(R.id.chats_recyclerview);
-                         Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts);
-                         RecyclerView.setAdapter(Adapter);
-                         RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                     }
 
-                     // first we take down the add contact promt.
-                     if(EmptyIndicator.getVisibility() == View.VISIBLE) {
-                         EmptyIndicator.setVisibility(View.INVISIBLE);
+
+                 if(RecyclerView != null ) {
+
+                     if(Current_Contacts.size() < response.body().size()) {
+                         Current_Contacts = response.body();
+                         Adapter.notifyDataSetChanged();
                      }
 
                  }
-                 else {
-                     // if no contacts then we show hint to add contact.
-                     if(EmptyIndicator.getVisibility() == View.INVISIBLE) {
-                         EmptyIndicator.setVisibility(View.VISIBLE);
+              else {
+                     Current_Contacts = response.body();
+                     if (Current_Contacts != null) {
+                         // we start caring about recycler view when there is contacts to show.
+                         if (RecyclerView == null) {
+                             RecyclerView = findViewById(R.id.chats_recyclerview);
+                             Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts);
+                             RecyclerView.setAdapter(Adapter);
+                             RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                         }
+
+                         // first we take down the add contact promt.
+                         if (EmptyIndicator.getVisibility() == View.VISIBLE) {
+                             EmptyIndicator.setVisibility(View.INVISIBLE);
+                         }
+
+
+                     } else {
+                         // if no contacts then we show hint to add contact.
+                         if (EmptyIndicator.getVisibility() == View.INVISIBLE) {
+                             EmptyIndicator.setVisibility(View.VISIBLE);
+                         }
+
                      }
 
                  }
-
-
 
 
             }
