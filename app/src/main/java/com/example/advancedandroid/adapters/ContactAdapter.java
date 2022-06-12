@@ -2,7 +2,6 @@ package com.example.advancedandroid.adapters;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -15,12 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.advancedandroid.AppActivity;
 import com.example.advancedandroid.MessagingActivity;
 import com.example.advancedandroid.R;
 import com.example.advancedandroid.models.Contact;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
@@ -34,6 +31,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
        list = List;
        AppContext = context;
        Token_bear = Token; // identifier of user who is seeing messaging screen.
+    }
+
+    public ContactAdapter(List<Contact> list) {
+        this.list = list;
     }
 
     @NonNull

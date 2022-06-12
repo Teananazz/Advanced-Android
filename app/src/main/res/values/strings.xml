@@ -10,4 +10,7 @@
     <string name="sender_time">01:30 pm</string>
     <string name="receiver_message">message</string>
     <string name="sender_message">msg</string>
+    <string name="add_contact">Add Contact</string>
+    <string name="server_address">Server Address</string>
+    <string name="back">Back</string>
 </resources>

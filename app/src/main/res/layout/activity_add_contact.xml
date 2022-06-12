@@ -4,38 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
+    tools:context=".AddContactActivity"
     android:orientation="vertical"
     >
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="20dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:id="@+id/UserName"
+            android:id="@+id/displayName1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/display_name"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:textColorHint="#757575" />
+
+        <EditText
+            android:id="@+id/userName2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/user_name"
-            android:inputType="text"
+            android:inputType="textPersonName"
             android:minHeight="48dp"
             android:textColorHint="#757575" />
 
         <EditText
-            android:id="@+id/Password"
+            android:id="@+id/serverAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:autofillHints=""
             android:ems="10"
-            android:hint="@string/password"
+            android:hint="@string/server_address"
             android:inputType="textPersonName"
             android:minHeight="48dp"
             android:textColorHint="#757575" />
@@ -46,13 +59,10 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/loginButton"
+                android:id="@+id/back_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/login_button"
-                android:onClick ="LoginAttempt"
-
-                />
+                android:text="@string/back" />
 
             <Space
                 android:layout_width="0dp"
@@ -60,11 +70,14 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/registerButton"
+                android:id="@+id/addContactButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/register_button" />
+                android:text="@string/add_contact"
+
+                />
         </LinearLayout>
 
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

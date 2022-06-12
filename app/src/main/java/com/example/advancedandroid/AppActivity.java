@@ -4,17 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.example.advancedandroid.adapters.ContactAdapter;
 import com.example.advancedandroid.api.Api;
 import com.example.advancedandroid.api.RetrofitClient;
 import com.example.advancedandroid.models.Contact;
+import com.example.advancedandroid.room.AppDB;
+import com.example.advancedandroid.room.ContactDao;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -33,11 +36,38 @@ public class AppActivity extends AppCompatActivity {
 
     private RecyclerView RecyclerView = null;
     private ContactAdapter Adapter;
+    private AppDB db;
+    private ContactDao contactDao;
+    private List<Contact> contacts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_appscreen);
+
+        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
+                .allowMainThreadQueries()
+                .build();
+
+        contactDao = db.contactDao();
+
+        FloatingActionButton addContactButton = findViewById(R.id.move_to_contactlist_fab);
+        addContactButton.setOnClickListener(v -> {
+            Intent i = new Intent(this, AddContactActivity.class);
+            startActivity(i);
+        });
+
+        contacts = contactDao.index();
+
+        RecyclerView rvContacts = findViewById(R.id.chats_recyclerview);
+        ContactAdapter adapter = new ContactAdapter(contacts);
+        /*
+        ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this,
+                android.R.layout.simple_list_item_1, contacts);
+        */
+        rvContacts.setAdapter(adapter);
+        rvContacts.setLayoutManager(new LinearLayoutManager(this));
+
 
        Intent intent = getIntent();
        Token = intent.getStringExtra("Token");
@@ -119,7 +149,7 @@ public class AppActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Contact>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "An error has occurred", Toast.LENGTH_LONG).show();
                 Log.d("Error222: ", t.toString());
             }
 
