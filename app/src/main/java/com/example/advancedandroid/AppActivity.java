@@ -93,7 +93,7 @@ public class AppActivity extends AppCompatActivity {
                          // we start caring about recycler view when there is contacts to show.
                          if (RecyclerView == null) {
                              RecyclerView = findViewById(R.id.chats_recyclerview);
-                             Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts);
+                             Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear);
                              RecyclerView.setAdapter(Adapter);
                              RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                          }
@@ -127,5 +127,6 @@ public class AppActivity extends AppCompatActivity {
 
 
     }
+
 
 }

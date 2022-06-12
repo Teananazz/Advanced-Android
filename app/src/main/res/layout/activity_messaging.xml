@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".MessagingActivity"
 
     android:id="@+id/parent_viewgroup"
     >
@@ -115,7 +116,10 @@
             android:padding="10dp"
             android:background="?attr/colorSecondary"
             android:src="@drawable/ic_baseline_send_24"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:onClick ="SendMessage"
+
+            />
     </androidx.cardview.widget.CardView>
 
 

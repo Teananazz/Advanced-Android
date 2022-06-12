@@ -34,6 +34,10 @@
             android:name=".AppActivity"
             android:exported="true" />
 
+        <activity
+            android:name=".MessagingActivity"
+            android:exported="true" />
+
     </application>
 
 </manifest>
