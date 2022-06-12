@@ -18,6 +18,7 @@ import com.example.advancedandroid.models.Contact;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,13 +84,16 @@ public class LoginActivity extends AppCompatActivity {
 
     private void LoginAttempt(String user, String pass) {
        String arr[] = {user, pass};
-        Call<String> call = RetrofitClient.getInstance().getMyApi().AttemptLogin(arr);
-        call.enqueue(new Callback<String>() {
+        Call<ResponseBody> call = RetrofitClient.getInstance().getMyApi().AttemptLogin(arr);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    Token = response.body().string();
+                }
+                catch(Exception e) {
 
-                 Token = response.body();
-
+                }
                 // failed login
                 if(Token == null) {
 
@@ -104,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
                 Log.d("Error222: ", t.toString());
             }
