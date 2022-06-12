@@ -15,6 +15,7 @@ import com.example.advancedandroid.adapters.ContactAdapter;
 import com.example.advancedandroid.api.Api;
 import com.example.advancedandroid.api.RetrofitClient;
 import com.example.advancedandroid.models.Contact;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -38,6 +39,12 @@ public class AppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_appscreen);
+
+        FloatingActionButton addContactButton = findViewById(R.id.move_to_contactlist_fab);
+        addContactButton.setOnClickListener(v -> {
+            Intent i = new Intent(this, AddContactActivity.class);
+            startActivity(i);
+        });
 
        Intent intent = getIntent();
        Token = intent.getStringExtra("Token");
