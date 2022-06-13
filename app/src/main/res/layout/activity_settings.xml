@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity">
+
+
+    <Button
+        android:id="@+id/ChangeUsername"
+        android:layout_width="385dp"
+        android:layout_height="63dp"
+        android:text="@string/change_username"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="99dp"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/ChangePassword"
+        android:layout_width="385dp"
+        android:layout_height="63dp"
+        android:text="@string/change_password"
+        app:layout_constraintBottom_toTopOf="@+id/ChangeTheme"
+        app:layout_constraintTop_toBottomOf="@+id/ChangeUsername"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <Button
+        android:id="@+id/ChangeTheme"
+        android:layout_width="385dp"
+        android:layout_height="63dp"
+        android:text="@string/change_theme"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="264dp" />
+
+    <TextView
+        android:id="@+id/SettingsUsername"
+        android:layout_width="90dp"
+        android:layout_height="40dp"
+        android:text=""
+        tools:layout_editor_absoluteX="104dp"
+        tools:layout_editor_absoluteY="30dp"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="64dp"
+        android:layout_height="69dp"
+        tools:layout_editor_absoluteX="28dp"
+        tools:layout_editor_absoluteY="16dp"
+        tools:srcCompat="@tools:sample/avatars"
+        tools:ignore="MissingConstraints" />
+</androidx.constraintlayout.widget.ConstraintLayout>
