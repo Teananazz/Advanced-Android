@@ -25,12 +25,15 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     private LayoutInflater ContactInflater;
     private Context AppContext;
     private String Token_bear;
+    private String UserHost;
+
     public ContactAdapter(Context context,
-                          List<Contact> List, String Token) {
+                          List<Contact> List, String Token, String UserHost) {
        ContactInflater = LayoutInflater.from(context);
        list = List;
        AppContext = context;
        Token_bear = Token; // identifier of user who is seeing messaging screen.
+        this.UserHost = UserHost;
     }
 
     public ContactAdapter(List<Contact> list) {
@@ -54,6 +57,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         holder.item_last_message.setText(contact.getLastMessage());
         holder.item_lastm_time.setText(contact.getLastDate());
         holder.UserName = contact.getUserName();
+        holder.UserNameHost = UserHost;
+        holder.Server = contact.getServer();
+
 
     }
 
@@ -73,6 +79,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
          public final ImageView img;
         final ContactAdapter mAdapter;
         private String UserName;
+        private String Server;
+        private String UserNameHost;
 
         // this method makes it so that we access all  these fields in onbindViewholder method.
         public ContactViewHolder(View itemView, ContactAdapter adapter) {
@@ -95,6 +103,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
             TransferApp.putExtra("Token", mAdapter.Token_bear);
             TransferApp.putExtra("Nickname", item_chatname.getText().toString());
             TransferApp.putExtra("UserName", UserName);
+            TransferApp.putExtra("HostUser", UserNameHost);
+            TransferApp.putExtra("Server", Server);
             AppContext.getApplicationContext().startActivity(TransferApp);
 
         }

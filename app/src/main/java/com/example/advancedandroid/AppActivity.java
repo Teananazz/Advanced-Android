@@ -54,6 +54,7 @@ public class AppActivity extends AppCompatActivity {
         FloatingActionButton addContactButton = findViewById(R.id.move_to_contactlist_fab);
         addContactButton.setOnClickListener(v -> {
             Intent i = new Intent(this, AddContactActivity.class);
+            i.putExtra("Token", Token_Bear);
             startActivity(i);
         });
 
@@ -106,9 +107,6 @@ public class AppActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Contact>> call , Response<List<Contact>> response) {
 
-
-
-
                  if(RecyclerView != null ) {
 
                      if(Current_Contacts.size() < response.body().size()) {
@@ -123,7 +121,7 @@ public class AppActivity extends AppCompatActivity {
                          // we start caring about recycler view when there is contacts to show.
                          if (RecyclerView == null) {
                              RecyclerView = findViewById(R.id.chats_recyclerview);
-                             Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear);
+                             Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user);
                              RecyclerView.setAdapter(Adapter);
                              RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                          }

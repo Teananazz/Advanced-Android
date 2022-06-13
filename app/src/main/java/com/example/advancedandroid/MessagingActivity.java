@@ -36,7 +36,9 @@ public class MessagingActivity extends AppCompatActivity {
     private String Token_bear;
     private Intent intent;
     private String Nickname;
+    private String HostUserName;
     private String UserNameContact;
+    private String ContactServer;
     private View[] views;
     private RecyclerView messages;
     private List<Message> MessageList;
@@ -52,6 +54,9 @@ public class MessagingActivity extends AppCompatActivity {
         Token_bear = intent.getStringExtra("Token");
         Nickname = intent.getStringExtra("Nickname");
         UserNameContact = intent.getStringExtra("UserName");
+        HostUserName = intent.getStringExtra("HostUser");
+        ContactServer = intent.getStringExtra("Server");
+
         views = new View[]{findViewById(R.id.receiver_name), findViewById(R.id.profile_pic_imageview), findViewById(R.id.msg_recyclerview)};
         TextView name = (TextView) views[0];
         name.setText(Nickname);
@@ -59,11 +64,11 @@ public class MessagingActivity extends AppCompatActivity {
 
         api = RetrofitClient.getInstance().getMyApi();
 
-        getMessages(Token_bear, UserNameContact);
+        getMessages(Token_bear, UserNameContact, 0);
 
     }
 
-    void getMessages(String Token, String UserNameContact) {
+    void getMessages(String Token, String UserNameContact, int flagChanged) {
 
         Call<List<Message>> call = api.getMessages(Token, UserNameContact);
         call.enqueue(new Callback<List<Message>>() {
@@ -72,23 +77,26 @@ public class MessagingActivity extends AppCompatActivity {
 
                 List<Message> entry = response.body();
 
+                // for now we get all the fields from database.
+                 if(flagChanged == 1) {
+                     MessageList.add(entry.get(entry.size() - 1));
+                     Adapter.notifyItemChanged(MessageList.size() - 1);
+                     messages.scrollToPosition(Adapter.getItemCount()-1);
+                 }
+                 else {
+                     MessageList = response.body();
 
-                MessageList = response.body();
+                         if (Adapter == null ) {
 
-                if (MessageList != null) {
+                         Adapter = new MessageAdapter(getApplicationContext(), MessageList);
+                         messages.setAdapter(Adapter);
+                         messages.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-                    if ((entry != null && entry.size() > MessageList.size()) && Adapter != null) {
-                        Adapter.notifyDataSetChanged();
-                    }
+                     }
 
-                    if (Adapter == null) {
-                        Adapter = new MessageAdapter(getApplicationContext(), MessageList);
-                        messages.setAdapter(Adapter);
-                        messages.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                     MessageList = response.body();
 
-                    }
-
-                }
+                 }
 
             }
 
@@ -103,40 +111,74 @@ public class MessagingActivity extends AppCompatActivity {
 
     }
 
+     // TODO: check a way to do that .
 
     public void SendMessage(View view)  {
 
-
-
-
-
-
-
         TextView f = findViewById(R.id.typing_space);
           String message = f.getText().toString();
-        //TODO: Massive problem - GSON Convertor can only be activated second - but the first convertor
-        // is an invalid send type - because asp.net awaits for a JSON!!! and not text What do??
-        // Two Options: 1. Get Two Different Retrofit client types.
-        //              2. Get Custom Converter
-        //               3. Find Way Bypass that since only one request
-        // Attempt number 1: Use an object
-
-        SendStringAsObject messageObject = new SendStringAsObject(message);
 
 
 
-        String body = "plain text request body";
-
-
-        Call <Void>  call = api.PostMessages(Token_bear, UserNameContact,  message);
+       Call <Void>  call = api.PostMessages(Token_bear, UserNameContact,  message);
         call.enqueue(new Callback <Void>() {
             @Override
             public void onResponse(Call <Void> call, Response <Void> response) {
 
                 f.setText("");
 
-                getMessages(Token_bear, UserNameContact);
+                getMessages(Token_bear, UserNameContact, 1);
 
+               SendTransferRequest(HostUserName , UserNameContact, message, ContactServer);
+
+
+            }
+
+            @Override
+            public void onFailure(Call <Void> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+                Log.d("Error222: ", t.toString());
+            }
+
+        });
+
+
+    }
+
+
+    public void SendTransferRequest(String from, String to, String message, String server) {
+
+        String serv = server;
+        Api custom = null;
+
+        if(server.contains("localhost")) {
+            server = server.replace("localhost", "10.0.0.2");
+
+        }
+        // if it is not equal to Base url, we have to create another retrofit object.
+        if(!server.equals("10.0.0.2:7179") ) {
+
+           RetrofitClient.getInstance().AddClient("https://".concat(server).concat("/api/"));
+            custom =  RetrofitClient.getInstance().getCustom_Api();
+
+
+        }
+
+        String arr[] ={ from, to, message};
+        Call<Void> call;
+        // will only enter custom if different server address than user.
+        if( custom != null) {
+            call = custom.SendTransfer(arr);
+        }
+        else {
+            call = api.SendTransfer(arr);
+        }
+
+        call.enqueue(new Callback <Void>() {
+            @Override
+            public void onResponse(Call <Void> call, Response <Void> response) {
+
+              Response k = response;
 
             }
 

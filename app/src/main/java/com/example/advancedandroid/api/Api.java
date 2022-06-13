@@ -19,11 +19,13 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 
 
 public interface Api {
 
     String BASE_URL = "https://10.0.2.2:7179/api/";
+    String BASE_URL_custom= BASE_URL.concat("/api/");
 
     @GET("Users")
     Call<List<Contact>> getUsers();
@@ -45,6 +47,12 @@ public interface Api {
     Call <Void> PostMessages(@Header("Authorization") String token, @Path("id") String id, @Body String content);
 
 
+    @POST("transfer")
+    // Url allows me to bypass base url so we can send to another server.
+    Call <Void> SendTransfer(@Body String[] arr);
+
+    @POST("contacts")
+    Call<Void> AddContact (@Header("Authorization") String token,@Body String[] arr);
 
 
 

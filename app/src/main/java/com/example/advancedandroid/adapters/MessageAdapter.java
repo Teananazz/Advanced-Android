@@ -71,7 +71,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public int getItemViewType(int position) {
-        if (list.get(position).getFlagSent()) {
+        if (!list.get(position).getFlagSent()) {
             return RECEIVE_MESSAGE;
         } else {
             return SENDING_MESSAGE;
