@@ -15,20 +15,22 @@
         <entry key="..\:/Projects/yearB/semesterB/Advanced-Android/app/src/main/res/layout/activity_login.xml" value="0.16666666666666666" />
         <entry key="..\:/Projects/yearB/semesterB/Advanced-Android/app/src/main/res/layout/activity_main.xml" value="0.14130434782608695" />
         <entry key="..\:/Projects/yearB/semesterB/Advanced-Android/app/src/main/res/layout/activity_register.xml" value="0.1" />
-        <entry key="..\:/Users/Nitzan/Documents/GitHub/Advanced-Android/app/src/main/res/layout/activity_add_contact.xml" value="0.20380434782608695" />
-        <entry key="..\:/Users/Nitzan/Documents/GitHub/Advanced-Android/app/src/main/res/layout/activity_register.xml" value="0.20380434782608695" />
-        <entry key="..\:/Users/Nitzan/Documents/GitHub/Advanced-Android/app/src/main/res/layout/activity_settings.xml" value="0.20380434782608695" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/drawable-v24/base_eye.xml" value="0.1" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/drawable-v24/chat_bubble_incoming.xml" value="0.3315" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/drawable-v24/chat_bubble_outgoing.xml" value="0.202" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/drawable-v24/ic_baseline_person_add_alt_1_24.xml" value="0.253" />
+        <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/drawable/add_photo.xml" value="0.1" />
+        <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/drawable/ic_addperson.xml" value="0.1" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/drawable/ic_baseline_keyboard_arrow_left_24.xml" value="0.253" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.253" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/activity_add_contact.xml" value="0.18854211201368107" />
+        <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/activity_change_password.xml" value="0.20262919310970082" />
+        <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/activity_change_username.xml" value="0.20262919310970082" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/activity_login.xml" value="0.353713768115942" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/activity_main.xml" value="0.3009833262077811" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/activity_messaging.xml" value="0.3009833262077811" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/activity_register.xml" value="0.353713768115942" />
+        <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/activity_settings.xml" value="0.20262919310970082" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/chat_bubble_outgoing.xml" value="0.24682971014492755" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/chats_list_items.xml" value="0.24682971014492755" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/group_list_item.xml" value="0.33" />

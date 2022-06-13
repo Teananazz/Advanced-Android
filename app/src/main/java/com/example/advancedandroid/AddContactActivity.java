@@ -127,7 +127,7 @@ public class AddContactActivity extends AppCompatActivity {
       }
 
       String arguments[] = {HostUser, TargetUser, serv};
-      
+
       Call<Void> call;
       // will only enter custom if different server address than user.
       if( custom != null) {

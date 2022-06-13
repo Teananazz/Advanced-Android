@@ -13,4 +13,7 @@
     <string name="add_contact">Add Contact</string>
     <string name="server_address">Server Address</string>
     <string name="back">Back</string>
+    <string name ="change_username"> ""</string>
+    <string name="change_password"> ""</string>
+    <string name ="change_theme">""</string>
 </resources>

@@ -3,6 +3,7 @@ package com.example.advancedandroid.api;
 import com.example.advancedandroid.models.Contact;
 import com.example.advancedandroid.models.Message;
 import com.example.advancedandroid.models.SendStringAsObject;
+import com.example.advancedandroid.models.User;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface Api {
     String BASE_URL_custom= BASE_URL.concat("/api/");
 
     @GET("Users")
-    Call<List<Contact>> getUsers();
+    Call<List<User>> getUsers();
 
     // Token is supposed to be returned if successfully logged in.
 
@@ -58,6 +59,9 @@ public interface Api {
     @POST("invitations")
 
      Call<Void> SendInvitation (@Body String[] arr);
+
+    @POST("Users/1")
+    Call <Void> CreateUser (@Body String[] args);
 
 
 
