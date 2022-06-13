@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.advancedandroid.R;
-import com.example.advancedandroid.models.Contact;
 import com.example.advancedandroid.models.Message;
 
 import java.util.List;
@@ -31,6 +30,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
          list = List;
 
+    }
+
+    public MessageAdapter(List<Message> messagesList) {
+        this.list = messagesList;
     }
 
 
@@ -56,7 +59,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         Message message = list.get(position);
 
         ((TextView)holder.Message).setText(message.getMessage());
-        ((TextView)holder.MessageDate).setText(message.getDateCreated());
+        ((TextView)holder.MessageDate).setText(message.getMessageDate());
 
     }
 

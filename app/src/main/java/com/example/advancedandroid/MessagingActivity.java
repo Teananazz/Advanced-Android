@@ -4,27 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
-import com.example.advancedandroid.adapters.ContactAdapter;
 import com.example.advancedandroid.adapters.MessageAdapter;
 import com.example.advancedandroid.api.Api;
 import com.example.advancedandroid.api.RetrofitClient;
-import com.example.advancedandroid.models.Contact;
 import com.example.advancedandroid.models.Message;
-import com.example.advancedandroid.models.SendStringAsObject;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import org.json.JSONObject;
+import com.example.advancedandroid.room.AppDB;
+import com.example.advancedandroid.room.MessageDao;
 
 import java.util.List;
 
@@ -44,6 +37,10 @@ public class MessagingActivity extends AppCompatActivity {
     private List<Message> MessageList;
     private Api api;
     private MessageAdapter Adapter;
+    private AppDB db;
+    private MessageDao messageDao;
+    private List<Message> messagesList;
+    private MessageAdapter messageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +62,20 @@ public class MessagingActivity extends AppCompatActivity {
         api = RetrofitClient.getInstance().getMyApi();
 
         getMessages(Token_bear, UserNameContact, 0);
+
+        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "MessageDB")
+                .allowMainThreadQueries()
+                .build();
+
+        messageDao = db.messageDao();
+
+        messagesList = messageDao.index();
+
+        RecyclerView rvMessages = findViewById(R.id.msg_recyclerview);
+        messageAdapter = new MessageAdapter(messagesList);
+        rvMessages.setAdapter(messageAdapter);
+        // TODO fix the problem with the line under me
+        //rvMessages.setLayoutManager(new LinearLayoutManager(this));
 
     }
 

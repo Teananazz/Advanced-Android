@@ -1,8 +1,6 @@
 package com.example.advancedandroid;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +43,7 @@ public class AppActivity extends AppCompatActivity {
     private AppDB db;
     private ContactDao contactDao;
     private List<Contact> contacts;
+    private ContactAdapter contactAdapter;
 
 
     // This is launcher for contact adding screen - so we can know the added contact.
@@ -96,13 +95,11 @@ public class AppActivity extends AppCompatActivity {
         contacts = contactDao.index();
 
         RecyclerView rvContacts = findViewById(R.id.chats_recyclerview);
-        ContactAdapter adapter = new ContactAdapter(contacts);
-        /*
-        ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this,
-                android.R.layout.simple_list_item_1, contacts);
-        */
-        rvContacts.setAdapter(adapter);
-        rvContacts.setLayoutManager(new LinearLayoutManager(this));
+        contactAdapter = new ContactAdapter(contacts);
+        rvContacts.setAdapter(contactAdapter);
+        // TODO fix the problem with the line under me
+        //rvContacts.setLayoutManager(new LinearLayoutManager(this));
+
 
 
        Intent intent = getIntent();
@@ -126,6 +123,14 @@ public class AppActivity extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        contacts.clear();
+        contacts.addAll(contactDao.index());
+        contactAdapter.notifyDataSetChanged();
     }
 
     void getContacts(String Token) {

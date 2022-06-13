@@ -1,7 +1,12 @@
 package com.example.advancedandroid.models;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity
 public class Message {
 
 
@@ -13,6 +18,8 @@ public class Message {
     private String Receiver;
 
     @SerializedName("message")
+    @PrimaryKey
+    @NonNull
     private String message;
 
     @SerializedName("creationDate")
@@ -20,6 +27,34 @@ public class Message {
 
     @SerializedName("sentMessage")
     private boolean sent_flag; // true if from contact, false is from user himself.
+
+    public boolean isSent_flag() {
+        return sent_flag;
+    }
+
+    public Message() {
+        message = "";
+    }
+
+    public void setSender(String sender) {
+        Sender = sender;
+    }
+
+    public void setReceiver(String receiver) {
+        Receiver = receiver;
+    }
+
+    public void setMessage(@NonNull String message) {
+        this.message = message;
+    }
+
+    public void setMessageDate(String messageDate) {
+        this.messageDate = messageDate;
+    }
+
+    public void setSent_flag(boolean sent_flag) {
+        this.sent_flag = sent_flag;
+    }
 
     public Message(String Sender, String Receiver, String message, String CreationDate, boolean SentMessage) {
         this.Sender= Sender;
@@ -36,17 +71,20 @@ public class Message {
 
     public String getReceiver() { return Receiver;}
 
-    public String getDateCreated() { return messageDate;}
+    public String getMessageDate() { return messageDate;}
 
     public boolean getFlagSent() { return sent_flag;}
 
     public String getMessage() { return message;}
 
-
-
-
-
-
-
-
+    @Override
+    public String toString() {
+        return "Message{" +
+                "Sender='" + Sender + '\'' +
+                ", Receiver='" + Receiver + '\'' +
+                ", message='" + message + '\'' +
+                ", messageDate='" + messageDate + '\'' +
+                ", sent_flag=" + sent_flag +
+                '}';
+    }
 }
