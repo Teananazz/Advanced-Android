@@ -55,6 +55,11 @@ public interface Api {
     Call<Void> AddContact (@Header("Authorization") String token,@Body String[] arr);
 
 
+    @POST("invitations")
+
+     Call<Void> SendInvitation (@Body String[] arr);
+
+
 
 
 }
