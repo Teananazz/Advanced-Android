@@ -45,31 +45,10 @@ public class AppActivity extends AppCompatActivity {
     private List<Contact> contacts;
     private ContactAdapter contactAdapter;
 
+    ActivityResultLauncher<Intent> Launcher;
 
     // This is launcher for contact adding screen - so we can know the added contact.
-    ActivityResultLauncher<Intent> Launcher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
 
-                    // 1 he just returned back and nothing happend.
-                    if (result.getResultCode() == 1) {
-
-
-                    }
-                    if(result.getResultCode() == 2) {
-                        Intent res = result.getData();
-                        String user = res.getStringExtra("username");
-                        String nickname =res.getStringExtra("nickname");
-                        String serv = res.getStringExtra("serv");
-                        Contact entry = new Contact(user, nickname ,serv, "", "");
-                        Current_Contacts.add(entry);
-                        Adapter.notifyItemInserted(Current_Contacts.size() - 1);
-
-                    }
-                }
-            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,20 +59,12 @@ public class AppActivity extends AppCompatActivity {
                 .allowMainThreadQueries()
                 .build();
 
+
+        DefineLauncher();
+
+        // why you need this? check later
         contactDao = db.contactDao();
-
-        FloatingActionButton addContactButton = findViewById(R.id.move_to_contactlist_fab);
-        addContactButton.setOnClickListener(v -> {
-            //
-            Intent i = new Intent(this, AddContactActivity.class);
-            i.putExtra("Token", Token_Bear);
-            i.putExtra("UserHost", user);
-            Launcher.launch(i);
-
-        });
-
         contacts = contactDao.index();
-
         RecyclerView rvContacts = findViewById(R.id.chats_recyclerview);
         contactAdapter = new ContactAdapter(contacts);
         rvContacts.setAdapter(contactAdapter);
@@ -118,11 +89,6 @@ public class AppActivity extends AppCompatActivity {
 
         // make it visible only if no contacts
          EmptyIndicator = findViewById(R.id.tutorial);
-
-
-
-
-
 
 
 
@@ -195,9 +161,39 @@ public class AppActivity extends AppCompatActivity {
 
     }
 
+     void DefineLauncher() {
+
+         Launcher = registerForActivityResult(
+                 new ActivityResultContracts.StartActivityForResult(),
+                 new ActivityResultCallback<ActivityResult>() {
+                     @Override
+                     public void onActivityResult(ActivityResult result) {
+
+                         // 1 he just returned back and nothing happend.
+                         if (result.getResultCode() == 1) {
 
 
+                         }
+                         if(result.getResultCode() == 2) {
+                             Intent res = result.getData();
+                             String user = res.getStringExtra("username");
+                             String nickname =res.getStringExtra("nickname");
+                             String serv = res.getStringExtra("serv");
+                             Contact entry = new Contact(user, nickname ,serv, "", "");
+                             Current_Contacts.add(entry);
+                             Adapter.notifyItemInserted(Current_Contacts.size() - 1);
+
+                         }
+                     }
+                 });
+     }
 
 
+    public void AddContactTransfer(View view) {
 
+            Intent intent = new Intent(this, AddContactActivity.class);
+        intent.putExtra("Token", Token_Bear);
+        intent.putExtra("UserHost", user);
+            Launcher.launch(intent);
+    }
 }

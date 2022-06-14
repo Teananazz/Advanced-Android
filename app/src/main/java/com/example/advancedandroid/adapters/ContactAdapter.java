@@ -52,6 +52,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     // this method sets the different fields of the object.
     public void onBindViewHolder(@NonNull ContactAdapter.ContactViewHolder holder, int position) {
 
+
         Contact contact = list.get(position);
         holder.item_chatname.setText(contact.getNickName());
         holder.item_last_message.setText(contact.getLastMessage());

@@ -92,7 +92,10 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_addperson" />
+        android:src="@drawable/ic_addperson"
+        android:onClick = "AddContactTransfer"
+
+        />
 
 
 </RelativeLayout>

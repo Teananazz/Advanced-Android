@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -39,45 +40,10 @@ public class AddContactActivity extends AppCompatActivity {
                 .build();
 
         contactDao = db.contactDao();
-        Intent intent = new Intent();
+
         my_api = RetrofitClient.getInstance().getMyApi();
 
-        Button addContactButton = findViewById(R.id.addContactButton);
-
-        addContactButton.setOnClickListener(v -> {
-            EditText userName = findViewById(R.id.userName2);
-            EditText nickName = findViewById(R.id.displayName1);
-            EditText server = findViewById(R.id.serverAddress);
-            Contact contact = new Contact(userName.getText().toString(),
-                    nickName.getText().toString(), server.getText().toString());
-
-            String user = userName.getText().toString();
-            String nickname = nickName.getText().toString();
-            String serv = server.getText().toString();
-
-
-            Intent intention = getIntent();
-            Bear_Token = intention.getStringExtra("Token");
-            HostUser = intention.getStringExtra("UserHost");
-            AddContact(user, nickname ,serv);
-
-            contactDao.insert(contact);
-
-            intent.putExtra("username", user);
-            intent.putExtra("nickname", nickname);
-            intent.putExtra("serv", serv);
-
-            setResult(2, intent);
-            finish();
-        });
-
-        Button backButton = findViewById(R.id.back_btn);
-        backButton.setOnClickListener(v -> {
-
-            setResult(1, intent);
-            finish();
-
-        });
+        
     }
 
   void AddContact(String user, String nickname, String serv) {
@@ -157,4 +123,42 @@ public class AddContactActivity extends AppCompatActivity {
 
   }
 
+
+    public void AddContact(View view) {
+        Intent intent = new Intent();
+        EditText userName = findViewById(R.id.userName2);
+        EditText nickName = findViewById(R.id.displayName1);
+        EditText server = findViewById(R.id.serverAddress);
+        Contact contact = new Contact(userName.getText().toString(),
+                nickName.getText().toString(), server.getText().toString());
+
+        String user = userName.getText().toString();
+        String nickname = nickName.getText().toString();
+        String serv = server.getText().toString();
+
+
+        Intent intention = getIntent();
+        Bear_Token = intention.getStringExtra("Token");
+        HostUser = intention.getStringExtra("UserHost");
+        AddContact(user, nickname ,serv);
+
+        contactDao.insert(contact);
+
+        intent.putExtra("username", user);
+        intent.putExtra("nickname", nickname);
+        intent.putExtra("serv", serv);
+
+        setResult(2, intent);
+        finish();
+
+
+
+    }
+
+    public void BackButtonActivate(View view) {
+        Intent intent = new Intent();
+        setResult(1, intent);
+        finish();
+
+    }
 }

@@ -104,6 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/register_button"
+            android:onClick ="AttemptRegister"
 
 
             />

@@ -62,7 +62,9 @@
                 android:id="@+id/back_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/back" />
+                android:text="@string/back"
+                android:onClick="BackButtonActivate"
+                />
 
             <Space
                 android:layout_width="0dp"
@@ -74,6 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_contact"
+                android:onClick ="AddContact"
 
                 />
         </LinearLayout>
