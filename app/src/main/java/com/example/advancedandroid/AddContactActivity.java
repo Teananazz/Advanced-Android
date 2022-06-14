@@ -30,6 +30,9 @@ public class AddContactActivity extends AppCompatActivity {
     private String Bear_Token;
     private Api my_api;
     String HostUser;
+    EditText userName;
+    EditText nickName;
+    EditText server;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +46,11 @@ public class AddContactActivity extends AppCompatActivity {
 
         my_api = RetrofitClient.getInstance().getMyApi();
 
-        
+
+       userName = findViewById(R.id.userName2);
+        nickName = findViewById(R.id.displayName1);
+        server = findViewById(R.id.serverAddress);
+
     }
 
   void AddContact(String user, String nickname, String serv) {
@@ -125,33 +132,29 @@ public class AddContactActivity extends AppCompatActivity {
 
 
     public void AddContact(View view) {
-        Intent intent = new Intent();
-        EditText userName = findViewById(R.id.userName2);
-        EditText nickName = findViewById(R.id.displayName1);
-        EditText server = findViewById(R.id.serverAddress);
-        Contact contact = new Contact(userName.getText().toString(),
-                nickName.getText().toString(), server.getText().toString());
+
 
         String user = userName.getText().toString();
         String nickname = nickName.getText().toString();
         String serv = server.getText().toString();
+        Contact contact = new Contact(user,
+                nickname, serv);
 
-
+        // This is intention we get from AppActivity
         Intent intention = getIntent();
         Bear_Token = intention.getStringExtra("Token");
         HostUser = intention.getStringExtra("UserHost");
-        AddContact(user, nickname ,serv);
 
+
+        AddContact(user, nickname ,serv);
         contactDao.insert(contact);
 
+        Intent intent = new Intent();
         intent.putExtra("username", user);
         intent.putExtra("nickname", nickname);
         intent.putExtra("serv", serv);
-
         setResult(2, intent);
         finish();
-
-
 
     }
 

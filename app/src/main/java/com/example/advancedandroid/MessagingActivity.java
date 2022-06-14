@@ -46,8 +46,8 @@ public class MessagingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messaging);
-        intent = getIntent();
 
+        intent = getIntent();
         Token_bear = intent.getStringExtra("Token");
         Nickname = intent.getStringExtra("Nickname");
         UserNameContact = intent.getStringExtra("UserName");
@@ -61,21 +61,25 @@ public class MessagingActivity extends AppCompatActivity {
 
         api = RetrofitClient.getInstance().getMyApi();
 
+
         getMessages(Token_bear, UserNameContact, 0);
+
 
         db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "MessageDB")
                 .allowMainThreadQueries()
                 .build();
-
         messageDao = db.messageDao();
-
         messagesList = messageDao.index();
 
+        
         RecyclerView rvMessages = findViewById(R.id.msg_recyclerview);
         messageAdapter = new MessageAdapter(messagesList);
         rvMessages.setAdapter(messageAdapter);
         // TODO fix the problem with the line under me
         //rvMessages.setLayoutManager(new LinearLayoutManager(this));
+
+
+
 
     }
 
@@ -122,14 +126,11 @@ public class MessagingActivity extends AppCompatActivity {
 
     }
 
-     // TODO: check a way to do that .
 
     public void SendMessage(View view)  {
 
         TextView f = findViewById(R.id.typing_space);
           String message = f.getText().toString();
-
-
 
        Call <Void>  call = api.PostMessages(Token_bear, UserNameContact,  message);
         call.enqueue(new Callback <Void>() {
