@@ -31,14 +31,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AppActivity extends AppCompatActivity {
-   private String Token;
-   private String Token_Bear; // Token with bear string before it.
-   private String user;
-   private Api api;
-   private View EmptyIndicator;
+    private String Token;
+    private String Token_Bear; // Token with bear string before it.
+    private String user;
+    private Api api;
+    private View EmptyIndicator;
 
-   private List<Contact> Current_Contacts;
-   private List<User> Users;
+    private List<Contact> Current_Contacts;
+    private List<User> Users;
     private RecyclerView RecyclerView = null;
     private ContactAdapter Adapter;
     private AppDB db;
@@ -71,16 +71,16 @@ public class AppActivity extends AppCompatActivity {
 
 
 
-       Intent intent = getIntent();
-       Token = intent.getStringExtra("Token");
-       Token_Bear = "Bearer " + Token;
-       user = intent.getStringExtra("User");
-       api = RetrofitClient.getInstance().getMyApi();
+        Intent intent = getIntent();
+        Token = intent.getStringExtra("Token");
+        Token_Bear = "Bearer " + Token;
+        user = intent.getStringExtra("User");
+        api = RetrofitClient.getInstance().getMyApi();
 
 
 
 
-       getContacts(Token);
+        getContacts(Token);
 
 
         // why you need this? check later

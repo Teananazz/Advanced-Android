@@ -31,8 +31,8 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     ListView superListView;
-   private String Token = null;
-   List<User> Users;
+    private String Token = null;
+    List<User> Users;
 
 //    ActivityResultLauncher<Intent> Launcher = registerForActivityResult(
 //            new ActivityResultContracts.StartActivityForResult(),

@@ -1,9 +1,14 @@
 package com.example.advancedandroid.models;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity
 public class User {
     @SerializedName("userName")
+    @PrimaryKey
     private String userName;
 
     @SerializedName("img")
@@ -15,9 +20,15 @@ public class User {
 
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
+    public void setImg(String img) {
+        this.img = img;
+    }
 
-   public String getUserName() {
+    public String getUserName() {
         return userName;
     }
 

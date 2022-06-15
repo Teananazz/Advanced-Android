@@ -6,6 +6,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -23,12 +25,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.advancedandroid.adapters.ContactAdapter;
 import com.example.advancedandroid.api.Api;
 import com.example.advancedandroid.api.RetrofitClient;
+import com.example.advancedandroid.models.Contact;
+import com.example.advancedandroid.models.User;
+import com.example.advancedandroid.room.AppDB;
+import com.example.advancedandroid.room.ContactDao;
+import com.example.advancedandroid.room.UserDao;
 
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +63,10 @@ public class RegisterActivity extends AppCompatActivity {
     ActivityResultLauncher<String> LauncherImg;
     ActivityResultLauncher<Intent> Launcher_UserCheck;
 
+    private AppDB db;
+    private UserDao userDao;
+    private List<User> users;
+
 
     private Bitmap ImageSaved;
     private Bitmap check;
@@ -67,6 +80,14 @@ public class RegisterActivity extends AppCompatActivity {
         validPassword = findViewById(R.id.passwordValidation);
         username = findViewById(R.id.userName1);
         displayname = findViewById(R.id.displayName);
+
+
+        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "UserDB")
+                .allowMainThreadQueries()
+                .build();
+
+        userDao = db.userDao();
+        users = userDao.index();
 
 
         defineImageLuncher();

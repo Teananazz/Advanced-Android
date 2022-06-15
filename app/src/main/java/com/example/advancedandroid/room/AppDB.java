@@ -5,9 +5,11 @@ import androidx.room.RoomDatabase;
 
 import com.example.advancedandroid.models.Contact;
 import com.example.advancedandroid.models.Message;
+import com.example.advancedandroid.models.User;
 
-@Database(entities = {Contact.class, Message.class}, version = 1)
+@Database(entities = {Contact.class, Message.class, User.class}, version = 1)
 public abstract class AppDB extends RoomDatabase {
     public abstract ContactDao contactDao();
     public abstract MessageDao messageDao();
+    public abstract UserDao userDao();
 }
