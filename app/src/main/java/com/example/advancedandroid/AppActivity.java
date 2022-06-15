@@ -19,6 +19,7 @@ import com.example.advancedandroid.adapters.ContactAdapter;
 import com.example.advancedandroid.api.Api;
 import com.example.advancedandroid.api.RetrofitClient;
 import com.example.advancedandroid.models.Contact;
+import com.example.advancedandroid.models.User;
 import com.example.advancedandroid.room.AppDB;
 import com.example.advancedandroid.room.ContactDao;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,7 +38,7 @@ public class AppActivity extends AppCompatActivity {
    private View EmptyIndicator;
 
    private List<Contact> Current_Contacts;
-
+   private List<User> Users;
     private RecyclerView RecyclerView = null;
     private ContactAdapter Adapter;
     private AppDB db;
@@ -59,17 +60,10 @@ public class AppActivity extends AppCompatActivity {
                 .allowMainThreadQueries()
                 .build();
 
-
+        CheckUserList();
         DefineLauncher();
 
-        // why you need this? check later
-        contactDao = db.contactDao();
-        contacts = contactDao.index();
-        RecyclerView rvContacts = findViewById(R.id.chats_recyclerview);
-        contactAdapter = new ContactAdapter(contacts);
-        rvContacts.setAdapter(contactAdapter);
-        // TODO fix the problem with the line under me
-        //rvContacts.setLayoutManager(new LinearLayoutManager(this));
+
 
 
 
@@ -85,6 +79,14 @@ public class AppActivity extends AppCompatActivity {
        getContacts(Token);
 
 
+        // why you need this? check later
+        contactDao = db.contactDao();
+        contacts = contactDao.index();
+        RecyclerView rvContacts = findViewById(R.id.chats_recyclerview);
+        contactAdapter = new ContactAdapter(contacts, Users);
+        rvContacts.setAdapter(contactAdapter);
+        // TODO fix the problem with the line under me
+        //rvContacts.setLayoutManager(new LinearLayoutManager(this));
 
 
         // make it visible only if no contacts
@@ -121,12 +123,10 @@ public class AppActivity extends AppCompatActivity {
                      Current_Contacts = response.body();
                      if (Current_Contacts != null) {
                          // we start caring about recycler view when there is contacts to show.
-                         if (RecyclerView == null) {
-                             RecyclerView = findViewById(R.id.chats_recyclerview);
-                             Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user);
-                             RecyclerView.setAdapter(Adapter);
-                             RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                         }
+                       //  RecyclerView = findViewById(R.id.chats_recyclerview);
+                        // Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
+                       //  RecyclerView.setAdapter(Adapter);
+                        // RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
                          // first we take down the add contact promt.
                          if (EmptyIndicator.getVisibility() == View.VISIBLE) {
@@ -195,5 +195,28 @@ public class AppActivity extends AppCompatActivity {
         intent.putExtra("Token", Token_Bear);
         intent.putExtra("UserHost", user);
             Launcher.launch(intent);
+    }
+
+
+    private void CheckUserList() {
+        Call<List<User>> call = RetrofitClient.getInstance().getMyApi().getUsers();
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                 Users = response.body();
+                RecyclerView = findViewById(R.id.chats_recyclerview);
+                Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
+                RecyclerView.setAdapter(Adapter);
+                RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+
+            }
+
+        });
     }
 }

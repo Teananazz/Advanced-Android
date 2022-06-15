@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -58,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Bitmap check;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
@@ -94,6 +95,8 @@ public class RegisterActivity extends AppCompatActivity {
                             FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
                             ImageSaved = BitmapFactory.decodeFileDescriptor(fileDescriptor);
 
+
+
                         }
                         catch(Exception e) {
 
@@ -108,6 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                         byte[] arr =  ImageStream.toByteArray();
                         img = Base64.encodeToString(arr, Base64.DEFAULT);
+
                         // how to decode img
                      //   byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
                        // Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -214,11 +218,10 @@ public class RegisterActivity extends AppCompatActivity {
             password.setError("The passwords has to contain both letters and numbers");
         else {
             // first we find out if user exists
-            Intent intent = new Intent(this, LoginActivity.class);
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             intent.putExtra("UserNameCheck", user);
             // need to somehow save img for each one.
-            intent.putExtra("img", img);
-
+           // intent.putExtra("img", img);
 
             Launcher_UserCheck.launch(intent);
 

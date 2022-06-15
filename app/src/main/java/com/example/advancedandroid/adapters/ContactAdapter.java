@@ -4,6 +4,9 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,26 +20,30 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.advancedandroid.MessagingActivity;
 import com.example.advancedandroid.R;
 import com.example.advancedandroid.models.Contact;
+import com.example.advancedandroid.models.User;
 
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
     private List<Contact> list;
+    private List<User> listUser;
     private LayoutInflater ContactInflater;
     private Context AppContext;
     private String Token_bear;
     private String UserHost;
 
     public ContactAdapter(Context context,
-                          List<Contact> List, String Token, String UserHost) {
+                          List<Contact> List, String Token, String UserHost, List<User> listUser) {
        ContactInflater = LayoutInflater.from(context);
        list = List;
        AppContext = context;
        Token_bear = Token; // identifier of user who is seeing messaging screen.
         this.UserHost = UserHost;
+        this.listUser = listUser;
     }
 
-    public ContactAdapter(List<Contact> list) {
+    public ContactAdapter(List<Contact> list, List<User> listUser) {
+        this.listUser = listUser;
         this.list = list;
     }
 
@@ -55,7 +62,38 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
         // TODO: get the img from Users so that we can decoode it and put in the picture.
 
+
+
+
         Contact contact = list.get(position);
+         String imgres = null;
+         User acc = null;
+        if(listUser!=null) {
+
+            for(int i = 0 ; i < listUser.size() ; i++) {
+                String username_1 = listUser.get(i).getUserName();
+                String username_2 = contact.getUsername();
+                if(username_1.equals(username_2)) {
+                    acc = listUser.get(i);
+                    break;
+                }
+
+            }
+
+        }
+
+
+
+        if(listUser!=null && acc!=null) {
+            imgres = acc.getImg();
+            byte[] decodedString = Base64.decode(imgres, Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+            holder.img.setImageBitmap(decodedByte);
+        }
+
+
+
         holder.item_chatname.setText(contact.getNickName());
         holder.item_last_message.setText(contact.getLastMessage());
         holder.item_lastm_time.setText(contact.getLastDate());

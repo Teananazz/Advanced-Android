@@ -60,13 +60,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button registerButton = findViewById(R.id.registerButton);
-        registerButton.setOnClickListener(v -> {
 
-            Intent i = new Intent(this, RegisterActivity.class);
-            // TODO: need to check without returning like this.
-            startActivity(i);
-        });
+
          // we update the User list.
         CheckUserList("", 1);
         // this intent is for checking if user exists
@@ -85,8 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
-    public void LoginAttempt(View view) {
+    public void LoginAttempting(View view) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -175,5 +169,11 @@ public class LoginActivity extends AppCompatActivity {
 
         });
 
+    }
+
+    public void GoRegister(View view) {
+        Intent i = new Intent(this, RegisterActivity.class);
+        // TODO: need to check without returning like this.
+        startActivity(i);
     }
 }
