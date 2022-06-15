@@ -63,7 +63,11 @@ public interface Api {
     @POST("Users/1")
     Call <Void> CreateUser (@Body String[] args);
 
+    @POST("AddFireBase")
+    Call <Void> JoinFireBase(@Body String[] args);
 
+    @POST("RemoveFireBase")
+    Call <Void> LeaveFireBase(String user);
 
 
 }

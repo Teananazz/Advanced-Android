@@ -46,6 +46,8 @@ public class AppActivity extends AppCompatActivity {
     private List<Contact> contacts;
     private ContactAdapter contactAdapter;
 
+
+
     ActivityResultLauncher<Intent> Launcher;
 
     // This is launcher for contact adding screen - so we can know the added contact.
@@ -55,10 +57,8 @@ public class AppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_appscreen);
+        String fire_token;
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(AppActivity.this, instanceIdResult -> {
-            String newToken = instanceIdResult.getToken();
-        });
 
         db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
                 .allowMainThreadQueries().fallbackToDestructiveMigration()
@@ -81,6 +81,13 @@ public class AppActivity extends AppCompatActivity {
        Token_Bear = "Bearer " + Token;
        user = intent.getStringExtra("User");
        api = RetrofitClient.getInstance().getMyApi();
+
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(AppActivity.this, instanceIdResult -> {
+            String newToken = instanceIdResult.getToken();
+            JoinFireBase(user, newToken);
+
+        });
 
 
 
@@ -213,7 +220,7 @@ public class AppActivity extends AppCompatActivity {
 
 
     private void CheckUserList() {
-        Call<List<User>> call = RetrofitClient.getInstance().getMyApi().getUsers();
+        Call<List<User>> call =api.getUsers();
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
@@ -232,5 +239,52 @@ public class AppActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    // we'll make them static in case we need to access them from other location.
+    public static void JoinFireBase(String user, String token) {
+        String arr[] = {user, token};
+        Call <Void> call = RetrofitClient.getInstance().getMyApi().JoinFireBase(arr);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Response<Void> k = response;
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+
+        });
+
+
+    }
+    public static void LeaveFireBase(String user) {
+     Call <Void> call = RetrofitClient.getInstance().getMyApi().LeaveFireBase(user);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                Response<Void> k = response;
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+
+        });
+
+    }
+
+
+    // when this activity is destroyed the user obviously not in firebase to get notifications.
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LeaveFireBase(user);
     }
 }
