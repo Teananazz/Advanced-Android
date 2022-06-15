@@ -67,7 +67,7 @@ public interface Api {
     Call <Void> JoinFireBase(@Body String[] args);
 
     @POST("RemoveFireBase")
-    Call <Void> LeaveFireBase(String user);
+    Call <Void> LeaveFireBase(@Body String user);
 
 
 }
