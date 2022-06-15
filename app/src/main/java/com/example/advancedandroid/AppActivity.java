@@ -1,15 +1,19 @@
 package com.example.advancedandroid;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +26,10 @@ import com.example.advancedandroid.models.Contact;
 import com.example.advancedandroid.models.User;
 import com.example.advancedandroid.room.AppDB;
 import com.example.advancedandroid.room.ContactDao;
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.List;
 
@@ -83,19 +90,39 @@ public class AppActivity extends AppCompatActivity {
        api = RetrofitClient.getInstance().getMyApi();
 
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(AppActivity.this, instanceIdResult -> {
-            String newToken = instanceIdResult.getToken();
-            JoinFireBase(user, newToken);
+       if(user!= null) {
+           runOnUiThread(new Runnable() {
+               @Override
+               public void run() {
 
-        });
+                   FirebaseMessaging.getInstance().getToken()
+                           .addOnCompleteListener(new OnCompleteListener<String>() {
+                               @Override
+                               public void onComplete(@NonNull Task<String> task) {
 
 
+                                   // Get new FCM registration token
+                                   String token = task.getResult();
+                                 //  ((TextView)findViewById(R.id.Title)).setText(token);
+
+                                   JoinFireBase(user, token);
+
+                               }
+                           });
+               }
+           });
+
+       }
 
         // meanwhile we checking server  in case there was additions.
-        CheckUserList();
-       getContacts(Token);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-
+                CheckUserList();
+                getContacts(Token);
+            }
+        });
 
 
         // make it visible only if no contacts
