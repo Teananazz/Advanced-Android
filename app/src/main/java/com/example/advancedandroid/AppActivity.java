@@ -21,7 +21,7 @@ import com.example.advancedandroid.api.RetrofitClient;
 import com.example.advancedandroid.models.Contact;
 import com.example.advancedandroid.room.AppDB;
 import com.example.advancedandroid.room.ContactDao;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.List;
 
@@ -54,6 +54,10 @@ public class AppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_appscreen);
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(AppActivity.this, instanceIdResult -> {
+            String newToken = instanceIdResult.getToken();
+        });
 
         db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
                 .allowMainThreadQueries()
