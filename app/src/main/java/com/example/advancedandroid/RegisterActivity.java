@@ -5,8 +5,10 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -178,18 +180,60 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
 
-                // TODO: need to check code 200 or something to indicate succesfull
-                Response k = response;
+                // successful creation
+                if(response.code() == 200) {
 
-                // TODO: need to find a way to save img for each contact - api does not support?
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                // setting result of register to successful
+                            if (!isFinishing()){
+                                new AlertDialog.Builder(RegisterActivity.this)
+                                        .setTitle("Successful Registration")
+                                        .setMessage("Your account has been successfully created.")
+                                        .setCancelable(false)
+                                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        }).show();
+                            }
+                        }
+                    });
+                }
+                else {
+                    if (!isFinishing()){
+                        new AlertDialog.Builder(RegisterActivity.this)
+                                .setTitle("Failure")
+                                .setMessage(" A failure has occured in the process")
+                                .setCancelable(false)
+                                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                }).show();
+                    }
+                }
+
                 finish();
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+                if (!isFinishing()){
+                    new AlertDialog.Builder(RegisterActivity.this)
+                            .setTitle("Failure")
+                            .setMessage(" A failure has occured in the process")
+                            .setCancelable(false)
+                            .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            }).show();
+                }
                 finish();
             }
         });

@@ -52,6 +52,8 @@ public class MessagingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messaging);
 
+
+
         intent = getIntent();
         Token_bear = intent.getStringExtra("Token");
         Nickname = intent.getStringExtra("Nickname");
@@ -73,7 +75,10 @@ public class MessagingActivity extends AppCompatActivity {
         db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "MessageDB")
                 .allowMainThreadQueries()
                 .build();
+
+
         messageDao = db.messageDao();
+
         messagesList = messageDao.index();
 
 

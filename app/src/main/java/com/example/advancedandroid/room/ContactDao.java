@@ -13,14 +13,17 @@ import java.util.List;
 @Dao
 public interface ContactDao {
 
-    @Query("SELECT * FROM Contact")
-    List<Contact> index();
+    @Query("SELECT * FROM Contact WHERE  usernameOfLooker = :userName")
+    List<Contact> index(String userName);
 
     @Query("SELECT * FROM Contact WHERE username = :userName")
     Contact get(String userName);
 
     @Insert
     void insert(Contact... contacts);
+
+    @Insert
+    void InsertAll(List<Contact> contactList);
 
     @Update
     void update(Contact... contacts);

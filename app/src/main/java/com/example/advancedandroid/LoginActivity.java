@@ -4,8 +4,11 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -20,6 +23,9 @@ import android.widget.Toast;
 import com.example.advancedandroid.api.RetrofitClient;
 import com.example.advancedandroid.models.Contact;
 import com.example.advancedandroid.models.User;
+import com.example.advancedandroid.room.AppDB;
+import com.example.advancedandroid.room.MessageDao;
+import com.example.advancedandroid.room.UserDao;
 
 import java.util.List;
 
@@ -34,26 +40,8 @@ public class LoginActivity extends AppCompatActivity {
    private String Token = null;
    List<User> Users;
 
-//    ActivityResultLauncher<Intent> Launcher = registerForActivityResult(
-//            new ActivityResultContracts.StartActivityForResult(),
-//            new ActivityResultCallback<ActivityResult>() {
-//                @Override
-//                public void onActivityResult(ActivityResult result) {
-//
-//                    // 1 here means register was successful.
-//                    //TODO: what happens after here?
-//                    if (result.getResultCode() == 1) {
-//
-//
-//                    }
-//                    // register failed
-//                    //TODO: write something?
-//                    if(result.getResultCode() == 2) {
-//
-//
-//                    }
-//                }
-//            });
+    private UserDao UserDao;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +49,19 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
+       // deleteDatabase("UserDB");
+       // deleteDatabase("ContactsDB");
+        //deleteDatabase("MessageDB");
+       // finish();
+        AppDB UserDatabase;
+        UserDatabase = Room.databaseBuilder(getApplicationContext(), AppDB.class, "UserDB")
+                .allowMainThreadQueries()
+                .build();
 
+
+        UserDao = UserDatabase.UserDao();
+
+        Users = UserDao.index();
          // we update the User list.
         CheckUserList("", 1);
         // this intent is for checking if user exists
@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                 CheckUserList(userCheck, 2);
             }
         }
+
 
     }
 
@@ -101,7 +102,9 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                List<User> Users = response.body();
+                 Users = response.body();
+                UserDao.insertAll(Users);
+
              if( flag == 2) {
 
                  String[] UserNames = new String[Users.size()];
@@ -142,7 +145,40 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    Token = response.body().string();
+                    // successful login
+                    if(response.code() == 200) {
+                        Token = response.body().string();
+
+                        Intent main_screen = new Intent(getApplicationContext(), AppActivity.class);
+                        main_screen.putExtra("Token", Token);
+                        main_screen.putExtra("User", user);
+                        startActivity(main_screen);
+
+                    }
+                    else {
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if (!isFinishing()){
+                                    new AlertDialog.Builder(LoginActivity.this)
+                                            .setTitle("Invalid Login Details")
+                                            .setMessage("Your username or password are invalid. \n please try again.")
+                                            .setCancelable(false)
+                                            .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                }
+                                            }).show();
+                                }
+                            }
+                        });
+
+                    }
+
+
                 }
                 catch(Exception e) {
 
@@ -154,17 +190,13 @@ public class LoginActivity extends AppCompatActivity {
                     // TODO: need to skip next few lines and also show a screen or something when happens.
                 }
 
-                Intent main_screen = new Intent(getApplicationContext(), AppActivity.class);
-                main_screen.putExtra("Token", Token);
-                main_screen.putExtra("User", user);
-                startActivity(main_screen);
 
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                Log.d("Error222: ", t.toString());
+
             }
 
         });

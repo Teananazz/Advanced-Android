@@ -63,8 +63,13 @@ public class AppActivity extends AppCompatActivity {
         db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
                 .allowMainThreadQueries()
                 .build();
+        contactDao = db.contactDao();
 
-        CheckUserList();
+      //  Current_Contacts = contactDao.index();
+        Users = db.UserDao().index();
+
+
+
         DefineLauncher();
 
 
@@ -79,34 +84,18 @@ public class AppActivity extends AppCompatActivity {
 
 
 
-
+        // meanwhile we checking server  in case there was additions.
+        CheckUserList();
        getContacts(Token);
 
 
-        // why you need this? check later
-        contactDao = db.contactDao();
-        contacts = contactDao.index();
-        RecyclerView rvContacts = findViewById(R.id.chats_recyclerview);
-        contactAdapter = new ContactAdapter(contacts, Users);
-        rvContacts.setAdapter(contactAdapter);
-        // TODO fix the problem with the line under me
-        //rvContacts.setLayoutManager(new LinearLayoutManager(this));
 
 
         // make it visible only if no contacts
          EmptyIndicator = findViewById(R.id.tutorial);
 
-
-
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        contacts.clear();
-        contacts.addAll(contactDao.index());
-        contactAdapter.notifyDataSetChanged();
-    }
 
     void getContacts(String Token) {
 
@@ -115,38 +104,59 @@ public class AppActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Contact>> call , Response<List<Contact>> response) {
 
-                 if(RecyclerView != null ) {
+                List<Contact> ServerContacts = response.body();
 
-                     if(Current_Contacts.size() < response.body().size()) {
-                         Current_Contacts = response.body();
-                         Adapter.notifyDataSetChanged();
-                     }
+                if(ServerContacts!=null) {
+                    for(int  i = 0 ; i< ServerContacts.size() ; i++) {
+                        ServerContacts.get(i).setUsernameOfLooker(user);
+                    }
+                }
+                Current_Contacts = response.body();
+                db.contactDao().InsertAll(Current_Contacts);
 
-                 }
-              else {
-                     Current_Contacts = response.body();
-                     if (Current_Contacts != null) {
-                         // we start caring about recycler view when there is contacts to show.
-                       //  RecyclerView = findViewById(R.id.chats_recyclerview);
-                        // Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
-                       //  RecyclerView.setAdapter(Adapter);
-                        // RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-                         // first we take down the add contact promt.
                          if (EmptyIndicator.getVisibility() == View.VISIBLE) {
-                             EmptyIndicator.setVisibility(View.INVISIBLE);
+                            EmptyIndicator.setVisibility(View.INVISIBLE);
                          }
 
-
-                     } else {
-                         // if no contacts then we show hint to add contact.
-                         if (EmptyIndicator.getVisibility() == View.INVISIBLE) {
+                         if(Current_Contacts == null || Current_Contacts.isEmpty() && EmptyIndicator.getVisibility() == View.INVISIBLE) {
+                             // if no contacts then we show hint to add contact.
                              EmptyIndicator.setVisibility(View.VISIBLE);
                          }
+                         
 
-                     }
-
-                 }
+//                 if(RecyclerView != null ) {
+//
+//                     if(Current_Contacts.size() < response.body().size()) {
+//                         Current_Contacts = response.body();
+//                         Adapter.notifyDataSetChanged();
+//                     }
+//
+//                 }
+//              else {
+//
+//                     Current_Contacts = response.body();
+//                     if (Current_Contacts != null) {
+//                         // we start caring about recycler view when there is contacts to show.
+//                       //  RecyclerView = findViewById(R.id.chats_recyclerview);
+//                        // Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
+//                       //  RecyclerView.setAdapter(Adapter);
+//                        // RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+//
+//                         // first we take down the add contact promt.
+//                         if (EmptyIndicator.getVisibility() == View.VISIBLE) {
+//                             EmptyIndicator.setVisibility(View.INVISIBLE);
+//                         }
+//
+//
+//                     } else {
+//                         // if no contacts then we show hint to add contact.
+//                         if (EmptyIndicator.getVisibility() == View.INVISIBLE) {
+//                             EmptyIndicator.setVisibility(View.VISIBLE);
+//                         }
+//
+//                     }
+//
+//                 }
 
 
             }
@@ -180,10 +190,10 @@ public class AppActivity extends AppCompatActivity {
                          }
                          if(result.getResultCode() == 2) {
                              Intent res = result.getData();
-                             String user = res.getStringExtra("username");
+                             String username = res.getStringExtra("username");
                              String nickname =res.getStringExtra("nickname");
                              String serv = res.getStringExtra("serv");
-                             Contact entry = new Contact(user, nickname ,serv, "", "");
+                             Contact entry = new Contact(username, nickname ,serv, "", "", user);
                              Current_Contacts.add(entry);
                              Adapter.notifyItemInserted(Current_Contacts.size() - 1);
 

@@ -27,6 +27,17 @@ import com.google.gson.annotations.SerializedName;
         @SerializedName("last")
         private String last_message;
 
+        public String getUsernameOfLooker() {
+            return usernameOfLooker;
+        }
+
+        public void setUsernameOfLooker(String usernameOfLooker) {
+            this.usernameOfLooker = usernameOfLooker;
+        }
+
+        @SerializedName("contactwith")
+        private String usernameOfLooker;
+
         public void setUsername(String username) {
             this.username = username;
         }
@@ -47,6 +58,8 @@ import com.google.gson.annotations.SerializedName;
             this.last_Date = last_Date;
         }
 
+
+
         public String getUsername() {
             return username;
         }
@@ -63,22 +76,25 @@ import com.google.gson.annotations.SerializedName;
             return last_Date;
         }
 
+
+
         @SerializedName("lastdate")
         private String last_Date;
 
-        public Contact(String id, String name, String server, String last, String lastdate) {
+        public Contact(String id, String name, String server, String last, String lastdate, String usernameOfLooker) {
             username = id;
             nickname = name;
             this.server = server;
             last_message = last;
             last_Date = lastdate;
-
+            this.usernameOfLooker = usernameOfLooker;
         }
 
-        public Contact(String username, String nickname, String server) {
+        public Contact(String username, String nickname, String server, String last_Date) {
             this.username = username;
             this.nickname = nickname;
             this.server = server;
+            this.last_Date = last_Date;
         }
 
         public String getUserName() {

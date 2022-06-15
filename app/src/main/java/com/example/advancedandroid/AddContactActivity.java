@@ -39,7 +39,7 @@ public class AddContactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_contact);
 
         db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
-                .allowMainThreadQueries()
+                .allowMainThreadQueries().fallbackToDestructiveMigration()
                 .build();
 
         contactDao = db.contactDao();
@@ -137,8 +137,12 @@ public class AddContactActivity extends AppCompatActivity {
         String user = userName.getText().toString();
         String nickname = nickName.getText().toString();
         String serv = server.getText().toString();
+
+        // api does not contain Host user field.
         Contact contact = new Contact(user,
-                nickname, serv);
+                nickname, serv, HostUser);
+
+        contactDao.insert(contact);
 
         // This is intention we get from AppActivity
         Intent intention = getIntent();
@@ -147,7 +151,8 @@ public class AddContactActivity extends AppCompatActivity {
 
 
         AddContact(user, nickname ,serv);
-        contactDao.insert(contact);
+
+
 
         Intent intent = new Intent();
         intent.putExtra("username", user);
