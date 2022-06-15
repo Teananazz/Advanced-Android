@@ -7,8 +7,15 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +25,9 @@ import android.widget.Toast;
 import com.example.advancedandroid.api.Api;
 import com.example.advancedandroid.api.RetrofitClient;
 
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileDescriptor;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,6 +53,9 @@ public class RegisterActivity extends AppCompatActivity {
     ActivityResultLauncher<String> LauncherImg;
     ActivityResultLauncher<Intent> Launcher_UserCheck;
 
+
+    private Bitmap ImageSaved;
+    private Bitmap check;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +88,30 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onActivityResult(Uri result) {
                         //TODO: save String representation in data base when creating user.
                         // and Retrieve it later.
-                        PhotoProfilePreview.setImageURI(result);
-                        img = result.toString();
+                        try {
+                            ParcelFileDescriptor parcelFileDescriptor =
+                                    getContentResolver().openFileDescriptor(result, "r");
+                            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+                            ImageSaved = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+
+                        }
+                        catch(Exception e) {
+
+                        }
+
+
+                        PhotoProfilePreview.setImageBitmap(ImageSaved);
+
+                        // encoding the image to BASE64 string so we can save it in database.
+                        ByteArrayOutputStream ImageStream = new ByteArrayOutputStream();
+                        ImageSaved.compress(Bitmap.CompressFormat.PNG, 100, ImageStream);
+
+                        byte[] arr =  ImageStream.toByteArray();
+                        img = Base64.encodeToString(arr, Base64.DEFAULT);
+                        // how to decode img
+                     //   byte[] decodedString = Base64.decode(img, Base64.DEFAULT);
+                       // Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
 
                     }
                 });

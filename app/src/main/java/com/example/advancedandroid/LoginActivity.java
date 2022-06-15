@@ -153,6 +153,7 @@ public class LoginActivity extends AppCompatActivity {
                 catch(Exception e) {
 
                 }
+
                 // failed login
                 if(Token == null) {
 

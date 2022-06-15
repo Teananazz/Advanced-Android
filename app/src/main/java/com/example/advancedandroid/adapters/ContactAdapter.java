@@ -53,6 +53,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     public void onBindViewHolder(@NonNull ContactAdapter.ContactViewHolder holder, int position) {
 
 
+        // TODO: get the img from Users so that we can decoode it and put in the picture.
+
         Contact contact = list.get(position);
         holder.item_chatname.setText(contact.getNickName());
         holder.item_last_message.setText(contact.getLastMessage());

@@ -32,15 +32,20 @@ public class MessagingActivity extends AppCompatActivity {
     private String HostUserName;
     private String UserNameContact;
     private String ContactServer;
+
     private View[] views;
     private RecyclerView messages;
+
     private List<Message> MessageList;
-    private Api api;
     private MessageAdapter Adapter;
+    private Api api;
+
     private AppDB db;
     private MessageDao messageDao;
     private List<Message> messagesList;
     private MessageAdapter messageAdapter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,14 +76,12 @@ public class MessagingActivity extends AppCompatActivity {
         messageDao = db.messageDao();
         messagesList = messageDao.index();
 
-        
+
         RecyclerView rvMessages = findViewById(R.id.msg_recyclerview);
         messageAdapter = new MessageAdapter(messagesList);
         rvMessages.setAdapter(messageAdapter);
         // TODO fix the problem with the line under me
         //rvMessages.setLayoutManager(new LinearLayoutManager(this));
-
-
 
 
     }
