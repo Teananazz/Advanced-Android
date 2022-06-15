@@ -6,22 +6,25 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-@Entity
+@Entity(primaryKeys = {"Sender","Receiver", "message", "messageDate" })
+
+
 public class Message {
 
 
     @SerializedName("senderUserName")
+    @NonNull
     private String Sender;
 
-
+    @NonNull
     @SerializedName("receiverUserName")
     private String Receiver;
 
     @SerializedName("message")
-    @PrimaryKey
     @NonNull
     private String message;
 
+    @NonNull
     @SerializedName("creationDate")
     private String messageDate;
 

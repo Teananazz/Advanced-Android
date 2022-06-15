@@ -3,6 +3,7 @@ package com.example.advancedandroid.room;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -22,7 +23,8 @@ public interface ContactDao {
     @Insert
     void insert(Contact... contacts);
 
-    @Insert
+    // same contact we care because server and last message could be changed.
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void InsertAll(List<Contact> contactList);
 
     @Update

@@ -7,14 +7,15 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 
-    @Entity
+    @Entity(primaryKeys = {"username","usernameOfLooker"})
+
     public class Contact {
 
         // serialized name has to be the exact name is json form.
         // to see the name of the field you can use postman and see the returned json.
 
         @SerializedName("id")
-        @PrimaryKey
+
         @NonNull
         private String username;
 
@@ -25,7 +26,7 @@ import com.google.gson.annotations.SerializedName;
         @SerializedName("server")
          private String server;
         @SerializedName("last")
-        private String last_message;
+        private String last_message ="";
 
         public String getUsernameOfLooker() {
             return usernameOfLooker;
@@ -35,9 +36,13 @@ import com.google.gson.annotations.SerializedName;
             this.usernameOfLooker = usernameOfLooker;
         }
 
+        @NonNull
         @SerializedName("contactwith")
         private String usernameOfLooker;
 
+
+        @SerializedName("lastdate")
+        private String last_Date ="";
         public void setUsername(String username) {
             this.username = username;
         }
@@ -78,8 +83,7 @@ import com.google.gson.annotations.SerializedName;
 
 
 
-        @SerializedName("lastdate")
-        private String last_Date;
+
 
         public Contact(String id, String name, String server, String last, String lastdate, String usernameOfLooker) {
             username = id;

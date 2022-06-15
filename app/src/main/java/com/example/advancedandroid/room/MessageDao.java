@@ -3,6 +3,7 @@ package com.example.advancedandroid.room;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -22,6 +23,11 @@ public interface MessageDao {
 
     @Insert
     void insert(Message... messages);
+
+
+    // same message we don't care.
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertAll(List<Message> list);
 
     @Update
     void update(Message... messages);

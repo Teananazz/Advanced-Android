@@ -61,7 +61,7 @@ public class AppActivity extends AppCompatActivity {
         });
 
         db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
-                .allowMainThreadQueries()
+                .allowMainThreadQueries().fallbackToDestructiveMigration()
                 .build();
         contactDao = db.contactDao();
 
@@ -111,7 +111,7 @@ public class AppActivity extends AppCompatActivity {
                         ServerContacts.get(i).setUsernameOfLooker(user);
                     }
                 }
-                Current_Contacts = response.body();
+                Current_Contacts = ServerContacts;
                 db.contactDao().InsertAll(Current_Contacts);
 
                          if (EmptyIndicator.getVisibility() == View.VISIBLE) {
@@ -122,7 +122,7 @@ public class AppActivity extends AppCompatActivity {
                              // if no contacts then we show hint to add contact.
                              EmptyIndicator.setVisibility(View.VISIBLE);
                          }
-                         
+
 
 //                 if(RecyclerView != null ) {
 //

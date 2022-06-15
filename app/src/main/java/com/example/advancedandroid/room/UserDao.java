@@ -23,7 +23,8 @@ import java.util.List;
         @Insert
         void insert(User... users);
 
-        @Insert (onConflict = OnConflictStrategy.IGNORE)
+        // replacing in case of change.
+        @Insert (onConflict = OnConflictStrategy.REPLACE)
         void insertAll(List<User> list);
 
         @Update
