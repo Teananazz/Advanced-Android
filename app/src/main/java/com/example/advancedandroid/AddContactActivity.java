@@ -1,6 +1,7 @@
 package com.example.advancedandroid;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
@@ -50,6 +52,11 @@ public class AddContactActivity extends AppCompatActivity {
        userName = findViewById(R.id.userName2);
         nickName = findViewById(R.id.displayName1);
         server = findViewById(R.id.serverAddress);
+
+        // This is intention we get from AppActivity
+        Intent intention = getIntent();
+        Bear_Token = intention.getStringExtra("Token");
+        HostUser = intention.getStringExtra("UserHost");
 
     }
 
@@ -104,10 +111,10 @@ public class AddContactActivity extends AppCompatActivity {
       Call<Void> call;
       // will only enter custom if different server address than user.
       if( custom != null) {
-          call = custom.SendTransfer(arguments);
+          call = custom.SendInvitation(arguments);
       }
       else {
-          call = my_api.SendTransfer(arguments);
+          call = my_api.SendInvitation(arguments);
       }
 
 
@@ -131,7 +138,7 @@ public class AddContactActivity extends AppCompatActivity {
   }
 
 
-    public void AddContact(View view) {
+    public void AddContactBtn(View view) {
 
 
         String user = userName.getText().toString();
@@ -140,26 +147,31 @@ public class AddContactActivity extends AppCompatActivity {
 
         // api does not contain Host user field.
         Contact contact = new Contact(user,
-                nickname, serv, HostUser);
+                nickname, serv,"", "", HostUser);
 
         contactDao.insert(contact);
 
-        // This is intention we get from AppActivity
-        Intent intention = getIntent();
-        Bear_Token = intention.getStringExtra("Token");
-        HostUser = intention.getStringExtra("UserHost");
+
+      ///  Intent intention = getIntent();
+      //  Bear_Token = intention.getStringExtra("Token");
+      //  HostUser = intention.getStringExtra("UserHost");
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                AddContact(user, nickname ,serv);
+                Intent intent = new Intent();
+                intent.putExtra("username", user);
+                intent.putExtra("nickname", nickname);
+                intent.putExtra("serv", serv);
+                setResult(2, intent);
+                finish();
+            }
+        });
 
 
-        AddContact(user, nickname ,serv);
 
-
-
-        Intent intent = new Intent();
-        intent.putExtra("username", user);
-        intent.putExtra("nickname", nickname);
-        intent.putExtra("serv", serv);
-        setResult(2, intent);
-        finish();
 
     }
 

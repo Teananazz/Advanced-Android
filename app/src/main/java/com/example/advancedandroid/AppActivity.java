@@ -31,6 +31,7 @@ import com.google.android.gms.tasks.Task;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -72,6 +73,7 @@ public class AppActivity extends AppCompatActivity {
                 .build();
         contactDao = db.contactDao();
 
+
       //  Current_Contacts = contactDao.index();
         Users = db.UserDao().index();
 
@@ -89,6 +91,16 @@ public class AppActivity extends AppCompatActivity {
        user = intent.getStringExtra("User");
        api = RetrofitClient.getInstance().getMyApi();
 
+        Current_Contacts = contactDao.index(user);
+        if(Current_Contacts == null) {
+            Current_Contacts = new ArrayList<Contact>();
+        }
+        if(Adapter == null) {
+              RecyclerView = findViewById(R.id.chats_recyclerview);
+                         Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
+                         RecyclerView.setAdapter(Adapter);
+                         RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        }
 
        if(user!= null) {
            runOnUiThread(new Runnable() {
@@ -114,6 +126,9 @@ public class AppActivity extends AppCompatActivity {
 
        }
 
+
+
+
         // meanwhile we checking server  in case there was additions.
         runOnUiThread(new Runnable() {
             @Override
@@ -131,6 +146,8 @@ public class AppActivity extends AppCompatActivity {
     }
 
 
+
+
     void getContacts(String Token) {
 
         Call<List<Contact>>  call = api.GetContacts(Token_Bear);
@@ -146,8 +163,9 @@ public class AppActivity extends AppCompatActivity {
                     }
                 }
                 Current_Contacts = ServerContacts;
-                db.contactDao().InsertAll(Current_Contacts);
-
+                if(Current_Contacts != null) {
+                    db.contactDao().InsertAll(Current_Contacts);
+                }
                          if (EmptyIndicator.getVisibility() == View.VISIBLE) {
                             EmptyIndicator.setVisibility(View.INVISIBLE);
                          }
@@ -156,6 +174,11 @@ public class AppActivity extends AppCompatActivity {
                              // if no contacts then we show hint to add contact.
                              EmptyIndicator.setVisibility(View.VISIBLE);
                          }
+                         if(Current_Contacts == null) {
+                             Current_Contacts = new ArrayList<Contact>();
+                         }
+
+
 
 
 //                 if(RecyclerView != null ) {
@@ -228,6 +251,9 @@ public class AppActivity extends AppCompatActivity {
                              String nickname =res.getStringExtra("nickname");
                              String serv = res.getStringExtra("serv");
                              Contact entry = new Contact(username, nickname ,serv, "", "", user);
+                             if(Current_Contacts == null) {
+                                 Current_Contacts = new ArrayList<Contact>();
+                             }
                              Current_Contacts.add(entry);
                              Adapter.notifyItemInserted(Current_Contacts.size() - 1);
 

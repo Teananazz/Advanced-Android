@@ -1,6 +1,9 @@
 package com.example.advancedandroid;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
@@ -45,12 +49,19 @@ public class MessagingActivity extends AppCompatActivity {
     private List<Message> messagesList;
     private MessageAdapter messageAdapter;
 
-
+    private BroadcastReceiver NotificationGetter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messaging);
+
+        setReceiver(); // this is setting the receiver that will get the intent from firebase.
+
+        // this is registering the intent
+            LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver((NotificationGetter),
+                    new IntentFilter(FireBaseService.REQUEST_RECEIVE)
+            );
 
 
 
@@ -60,6 +71,15 @@ public class MessagingActivity extends AppCompatActivity {
         UserNameContact = intent.getStringExtra("UserName");
         HostUserName = intent.getStringExtra("HostUser");
         ContactServer = intent.getStringExtra("Server");
+
+         String notification = intent.getStringExtra("message");
+         if( notification!=null) {
+             getMessages(Token_bear, UserNameContact, 1);
+             finish();
+
+         }
+
+
 
         views = new View[]{findViewById(R.id.receiver_name), findViewById(R.id.profile_pic_imageview), findViewById(R.id.msg_recyclerview)};
         TextView name = (TextView) views[0];
@@ -90,6 +110,25 @@ public class MessagingActivity extends AppCompatActivity {
 
 
     }
+
+    private void setReceiver() {
+
+        NotificationGetter = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try {
+                    String   value= intent.getStringExtra("message");
+                    getMessages(Token_bear, UserNameContact, 1);
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+    }
+
 
     void getMessages(String Token, String UserNameContact, int flagChanged) {
 

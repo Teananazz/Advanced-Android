@@ -20,7 +20,7 @@ public interface ContactDao {
     @Query("SELECT * FROM Contact WHERE username = :userName")
     Contact get(String userName);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Contact... contacts);
 
     // same contact we care because server and last message could be changed.

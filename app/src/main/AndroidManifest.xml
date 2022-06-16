@@ -5,11 +5,26 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Required to maintain app compatibility. -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
-    <!--  firebase won't work without this at api >=33
-       starting at api 33 you need to ask premission for post notification.
+
+    <!-- all below are required start at api level 33 for this program -->
+
+
+    <!--
+    firebase won't work without  this
      -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+
+    <!--
+     reading gallery images.
+    -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+
+
 
     <application
         android:allowBackup="true"
@@ -30,7 +45,7 @@
         <service
             android:name=".FireBaseService"
             android:enabled="true"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

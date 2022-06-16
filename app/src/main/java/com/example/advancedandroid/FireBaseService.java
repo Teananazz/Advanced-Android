@@ -1,13 +1,20 @@
 package com.example.advancedandroid;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -16,14 +23,20 @@ public class FireBaseService extends FirebaseMessagingService {
     public FireBaseService() {
 
     }
+    public static final String REQUEST_RECEIVE = "1";
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+
+
+
+        SendNotificationToApp(remoteMessage.getNotification().getBody());
+
         if (remoteMessage.getNotification() != null) {
             createNotificationChannel();
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setSmallIcon(android.R.mipmap.sym_def_app_icon)
                     .setContentTitle(remoteMessage.getNotification().getTitle())
                     .setContentText(remoteMessage.getNotification().getBody())
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
@@ -32,6 +45,7 @@ public class FireBaseService extends FirebaseMessagingService {
             notificationManager.notify(1, builder.build());
         }
     }
+
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -61,6 +75,22 @@ public class FireBaseService extends FirebaseMessagingService {
         // FCM registration token to your app server.
 
     }
+
+    MessagingActivity k;
+    private void SendNotificationToApp(String remoteMessage) {
+        LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(getBaseContext());
+
+        Intent intent = new Intent(REQUEST_RECEIVE);
+        intent.putExtra("message", remoteMessage);
+
+        broadcaster.sendBroadcast(intent);
+
+
+
+
+    }
+
+
 
 
 
