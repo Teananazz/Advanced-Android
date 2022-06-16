@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.advancedandroid"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -46,4 +46,12 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
     annotationProcessor 'androidx.room:room-compiler:2.4.2'
     implementation 'com.google.firebase:firebase-installations:17.0.1'
+    def fragment_version = "1.4.1"
+    def activity_version = "1.4.0"
+
+    // Java language implementation
+    implementation "androidx.activity:activity:$activity_version"
+    // Kotlin
+    // Java language implementation
+    implementation "androidx.fragment:fragment:$fragment_version"
 }

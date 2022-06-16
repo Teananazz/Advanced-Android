@@ -1,30 +1,28 @@
 package com.example.advancedandroid;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.advancedandroid.api.RetrofitClient;
-import com.example.advancedandroid.models.Contact;
 import com.example.advancedandroid.models.User;
 import com.example.advancedandroid.room.AppDB;
-import com.example.advancedandroid.room.MessageDao;
 import com.example.advancedandroid.room.UserDao;
 
 import java.util.List;
@@ -43,11 +41,24 @@ public class LoginActivity extends AppCompatActivity {
     private UserDao UserDao;
 
 
+
+    // we use this launcher in order to get permissions for api>=33 and others we might might need.
+    private ActivityResultLauncher<String> requestPermissionLauncher ;
+
+    // only in api 33
+    private final int REQUEST_PERMISSION_POST_NOTIFICATIONS=1;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        setPermissionLauncher();
+        RequestPermissions(); // without this nothing works properly - needs premission.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
 
       // deleteDatabase("UserDB");
        // deleteDatabase("ContactsDB");
@@ -57,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
         UserDatabase = Room.databaseBuilder(getApplicationContext(), AppDB.class, "UserDB")
                 .allowMainThreadQueries().fallbackToDestructiveMigration()
                 .build();
-
 
         UserDao = UserDatabase.UserDao();
 
@@ -75,8 +85,125 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    private void setPermissionLauncher() {
+        requestPermissionLauncher=  registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+
+
+                // Permission is granted. Continue the action or workflow in your
+                // app.
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (!isFinishing()){
+                            new AlertDialog.Builder(LoginActivity.this)
+                                    .setTitle("Refused Permission")
+                                    .setMessage("This app cannot proceed without the permission")
+                                    .setCancelable(false)
+                                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    }).show();
+                        }
+                        finish();
+                    }
+                });
+                finish();
+            }
+        });
 
     }
+
+    private void RequestPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+            // to send notification in api>=33 we have to get permissions.
+            RequestTiramisuPermission(Manifest.permission.POST_NOTIFICATIONS);
+
+            // instead of permission READ_EXTERNAL_STORAGE -
+            //
+            //  in api>=33 we need to approach one of three permissions
+            //Images and photos	READ_MEDIA_IMAGES
+            //Videos	READ_MEDIA_VIDEO
+            //Audio files	READ_MEDIA_AUDIO
+            RequestTiramisuPermission(Manifest.permission.READ_MEDIA_IMAGES);
+
+        }
+
+        }
+        private void RequestTiramisuPermission(final String permission) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+                int checkGranted = ContextCompat.checkSelfPermission(
+                        this, permission);
+
+                if (checkGranted == PackageManager.PERMISSION_GRANTED) {
+                    // here we don't need to do anything as we have permission.
+
+                }else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        permission)) {
+                    showExplanation("Permission Needed Else app won't work.", "Rationale", Manifest.permission.POST_NOTIFICATIONS, REQUEST_PERMISSION_POST_NOTIFICATIONS);
+                } else {
+
+                    requestPermissionLauncher.launch(
+                            permission);
+                }
+
+            }
+        }
+
+    private void showExplanation(String title,
+                                 String message,
+                                 final String permission,
+                                 final int permissionRequestCode) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        requestPermissionLauncher.launch(
+                                permission);
+                    }
+                }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if (!isFinishing()){
+                                    new AlertDialog.Builder(LoginActivity.this)
+                                            .setTitle("Refused Permission")
+                                            .setMessage("This app cannot proceed without the permission")
+                                            .setCancelable(false)
+                                            .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                }
+                                            }).show();
+                                }
+                                finish();
+                            }
+                        });
+
+                }});
+        builder.create().show();
+    }
+
+
+
+
+
+
+
+
+
 
 
 

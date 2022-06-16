@@ -16,13 +16,13 @@
     <!--
     firebase won't work without  this
      -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" tools:remove="android:maxSdkVersion"/>
 
 
     <!--
      reading gallery images.
     -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:remove="android:maxSdkVersion"/>
 
 
 

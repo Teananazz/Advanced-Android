@@ -32,6 +32,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     private String Token_bear;
     private String UserHost;
 
+
     public ContactAdapter(Context context,
                           List<Contact> List, String Token, String UserHost, List<User> listUser) {
        ContactInflater = LayoutInflater.from(context);
@@ -86,10 +87,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
         if(listUser!=null && acc!=null) {
             images = acc.getImg();
-            byte[] decodedString = Base64.decode(images, Base64.DEFAULT);
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            if(images != null) {
+                byte[] decodedString = Base64.decode(images, Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
-            holder.img.setImageBitmap(decodedByte);
+                holder.img.setImageBitmap(decodedByte);
+            }
+
         }
 
 
@@ -122,7 +126,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         private String UserName;
         private String Server;
         private String UserNameHost;
-        private Context AppContext;
+        public Context AppContext;
+
 
         // this method makes it so that we access all these fields in onbindViewholder method.
         public ContactViewHolder(View itemView, ContactAdapter adapter) {
@@ -134,6 +139,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
             img = itemView.findViewById(R.id.profile_pic_imageview);
             this.mAdapter = adapter;
             itemView.setOnClickListener(this);
+            this.AppContext = adapter.AppContext;
         }
 
         @Override
