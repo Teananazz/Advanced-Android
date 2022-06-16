@@ -38,8 +38,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
        list = List;
        AppContext = context;
        Token_bear = Token; // identifier of user who is seeing messaging screen.
-        this.UserHost = UserHost;
-        this.listUser = listUser;
+       this.UserHost = UserHost;
+       this.listUser = listUser;
     }
 
     public ContactAdapter(List<Contact> list, List<User> listUser) {
@@ -60,14 +60,14 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     public void onBindViewHolder(@NonNull ContactAdapter.ContactViewHolder holder, int position) {
 
 
-        // TODO: get the img from Users so that we can decoode it and put in the picture.
+        // TODO: get the img from Users so that we can decode it and put in the picture.
 
 
 
 
         Contact contact = list.get(position);
-         String imgres = null;
-         User acc = null;
+        String images = null;
+        User acc = null;
         if(listUser!=null) {
 
             for(int i = 0 ; i < listUser.size() ; i++) {
@@ -85,8 +85,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
 
         if(listUser!=null && acc!=null) {
-            imgres = acc.getImg();
-            byte[] decodedString = Base64.decode(imgres, Base64.DEFAULT);
+            images = acc.getImg();
+            byte[] decodedString = Base64.decode(images, Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
             holder.img.setImageBitmap(decodedByte);
@@ -112,18 +112,19 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
        return 0;
     }
     // we implement on click so we can click contacts.
-    class ContactViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ContactViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView item_chatname;
         public final TextView item_last_message;
         public final TextView item_lastm_time;
         public final CardView card;
-         public final ImageView img;
+        public final ImageView img;
         final ContactAdapter mAdapter;
         private String UserName;
         private String Server;
         private String UserNameHost;
+        private Context AppContext;
 
-        // this method makes it so that we access all  these fields in onbindViewholder method.
+        // this method makes it so that we access all these fields in onbindViewholder method.
         public ContactViewHolder(View itemView, ContactAdapter adapter) {
             super(itemView);
             item_chatname = itemView.findViewById(R.id.chat_name);

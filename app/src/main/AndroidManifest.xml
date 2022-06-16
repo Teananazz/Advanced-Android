@@ -58,7 +58,7 @@
             android:name=".RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".AppActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -67,7 +67,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AppActivity"
+            android:name=".LoginActivity"
             android:exported="true" />
         <activity
             android:name=".MessagingActivity"
