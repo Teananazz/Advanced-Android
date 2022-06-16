@@ -2,6 +2,7 @@ package com.example.advancedandroid;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,15 +40,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AppActivity extends AppCompatActivity {
-   private String Token;
-   private String Token_Bear; // Token with bear string before it.
-   private String user;
-   private Api api;
-   private View EmptyIndicator;
+    private String Token;
+    private String Token_Bear; // Token with bear string before it.
+    private String user;
+    private Api api;
+    private View EmptyIndicator;
 
-   private List<Contact> Current_Contacts;
-   private List<User> Users;
+    private List<Contact> Current_Contacts;
+    private List<User> Users;
     private RecyclerView RecyclerView = null;
+    private RecyclerView RecyclerViewMessages = null;
     private ContactAdapter Adapter;
     private AppDB db;
     private ContactDao contactDao;
@@ -279,11 +281,18 @@ public class AppActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                 Users = response.body();
+                Users = response.body();
                 RecyclerView = findViewById(R.id.chats_recyclerview);
+                RecyclerViewMessages = findViewById(R.id.messages_recyclerview);
                 Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
                 RecyclerView.setAdapter(Adapter);
                 RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                int orientation = getResources().getConfiguration().orientation;
+                if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    // In landscape
+                    ContactAdapter.ContactViewHolder contactViewHolder = new ContactAdapter.ContactViewHolder(RecyclerViewMessages, Adapter);
+                    contactViewHolder.onClick(RecyclerViewMessages);
+                }
 
             }
 
