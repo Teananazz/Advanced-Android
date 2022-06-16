@@ -4,7 +4,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.room.Room;
 
@@ -25,7 +24,10 @@ import com.example.advancedandroid.models.User;
 import com.example.advancedandroid.room.AppDB;
 import com.example.advancedandroid.room.UserDao;
 
+import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -43,7 +45,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
     // we use this launcher in order to get permissions for api>=33 and others we might might need.
-    private ActivityResultLauncher<String> requestPermissionLauncher ;
+    private ActivityResultLauncher<String[]> requestPermissionLauncher ;
+    private ActivityResultLauncher<String> requestMultiplePermissionLauncher;
 
     // only in api 33
     private final int REQUEST_PERMISSION_POST_NOTIFICATIONS=1;
@@ -88,113 +91,90 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setPermissionLauncher() {
-        requestPermissionLauncher=  registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) {
+        requestPermissionLauncher=  registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), isGranted -> {
+
+            Map<String, Boolean> l = isGranted;
+             int flag = 0;
+                for (String key : l.keySet()) {
+                     boolean val = l.get(key);
+                    if (!val) {
+
+                        flag = 1;
 
 
-                // Permission is granted. Continue the action or workflow in your
-                // app.
-            } else {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        if (!isFinishing()){
-                            new AlertDialog.Builder(LoginActivity.this)
-                                    .setTitle("Refused Permission")
-                                    .setMessage("This app cannot proceed without the permission")
-                                    .setCancelable(false)
-                                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                        }
-                                    }).show();
-                        }
-                        finish();
                     }
-                });
-                finish();
-            }
-        });
+                }
+                if(flag == 1) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
 
+                            if (!isFinishing()){
+                                new AlertDialog.Builder(LoginActivity.this)
+                                        .setTitle("Need permissions or can't run")
+                                        .setMessage("Permissions must be given to run this app.")
+                                        .setCancelable(false)
+                                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        }).show();
+                            }
+                        }
+                    });
+                }
+
+
+
+
+
+
+
+        });
     }
+
 
     private void RequestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
             // to send notification in api>=33 we have to get permissions.
-            RequestTiramisuPermission(Manifest.permission.POST_NOTIFICATIONS);
-
             // instead of permission READ_EXTERNAL_STORAGE -
             //
             //  in api>=33 we need to approach one of three permissions
             //Images and photos	READ_MEDIA_IMAGES
             //Videos	READ_MEDIA_VIDEO
             //Audio files	READ_MEDIA_AUDIO
-            RequestTiramisuPermission(Manifest.permission.READ_MEDIA_IMAGES);
+
+            // also in >=33 we need post notification permission to send notifications.
+            RequestTiramisuPermission(Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.READ_MEDIA_IMAGES);
+
+
 
         }
 
         }
-        private void RequestTiramisuPermission(final String permission) {
+        private void RequestTiramisuPermission(final String permission, final String permission2) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-
+                String[] PERMISSIONS = {
+                       permission,
+                        permission2
+                };
                 int checkGranted = ContextCompat.checkSelfPermission(
                         this, permission);
+                int checkGranted2 = ContextCompat.checkSelfPermission(
+                        this, permission2);
 
-                if (checkGranted == PackageManager.PERMISSION_GRANTED) {
-                    // here we don't need to do anything as we have permission.
-
-                }else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        permission)) {
-                    showExplanation("Permission Needed Else app won't work.", "Rationale", Manifest.permission.POST_NOTIFICATIONS, REQUEST_PERMISSION_POST_NOTIFICATIONS);
-                } else {
+                if(!(checkGranted == PackageManager.PERMISSION_GRANTED & checkGranted2 == PackageManager.PERMISSION_GRANTED))
 
                     requestPermissionLauncher.launch(
-                            permission);
+                            PERMISSIONS);
                 }
 
             }
-        }
 
-    private void showExplanation(String title,
-                                 String message,
-                                 final String permission,
-                                 final int permissionRequestCode) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        requestPermissionLauncher.launch(
-                                permission);
-                    }
-                }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
 
-                                if (!isFinishing()){
-                                    new AlertDialog.Builder(LoginActivity.this)
-                                            .setTitle("Refused Permission")
-                                            .setMessage("This app cannot proceed without the permission")
-                                            .setCancelable(false)
-                                            .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
 
-                                                }
-                                            }).show();
-                                }
-                                finish();
-                            }
-                        });
-
-                }});
-        builder.create().show();
-    }
 
 
 
