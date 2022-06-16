@@ -25,12 +25,16 @@
 <!--    </androidx.viewpager2.widget.ViewPager2>-->
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/my_toolbar"
-            android:background="?attr/colorPrimary"
-            >
+            android:background="?attr/colorPrimary">
 
 
             <TextView
@@ -42,44 +46,68 @@
                 android:textSize="24sp" />
 
 
-
         </androidx.appcompat.widget.Toolbar>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/contacts_recyclerview"
+                android:layout_width="100dp"
+                android:layout_height="316dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chats_recyclerview"
+                android:layout_width="500dp"
+                android:layout_height="316dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tutorial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Your contact list seems to be empty. Click there to add contact --->"
+                android:textSize="24sp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 
-
-
-<!--    <View-->
+    <!--    <View-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="1dp"-->
 <!--        android:background="?attr/colorPrimaryVariant"-->
 <!--        android:layout_below="@+id/my_toolbar"-->
 <!--        android:id="@+id/view"-->
 <!--        />-->
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chats_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/my_toolbar"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:orientation="vertical" />
-
-
-    <TextView
-        android:id="@+id/tutorial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:visibility="invisible"
-        android:layout_toLeftOf="@+id/move_to_contactlist_fab"
-        android:padding="10dp"
-        android:text="Your contact list seems to be empty. Click there to add contact --->"
-        android:textSize="24sp" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

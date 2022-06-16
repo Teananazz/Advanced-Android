@@ -2,6 +2,7 @@ package com.example.advancedandroid;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,15 +39,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AppActivity extends AppCompatActivity {
-   private String Token;
-   private String Token_Bear; // Token with bear string before it.
-   private String user;
-   private Api api;
-   private View EmptyIndicator;
+    private String Token;
+    private String Token_Bear; // Token with bear string before it.
+    private String user;
+    private Api api;
+    private View EmptyIndicator;
 
-   private List<Contact> Current_Contacts;
-   private List<User> Users;
+    private List<Contact> Current_Contacts;
+    private List<User> Users;
     private RecyclerView RecyclerView = null;
+    private RecyclerView RecyclerViewMessages = null;
     private ContactAdapter Adapter;
     private AppDB db;
     private ContactDao contactDao;
@@ -72,7 +74,7 @@ public class AppActivity extends AppCompatActivity {
                 .build();
         contactDao = db.contactDao();
 
-      //  Current_Contacts = contactDao.index();
+        // Current_Contacts = contactDao.index();
         Users = db.UserDao().index();
 
 
@@ -112,9 +114,17 @@ public class AppActivity extends AppCompatActivity {
                }
            });
 
+           int orientation = getResources().getConfiguration().orientation;
+           if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+               // In landscape
+               View v = findViewById(R.id.contacts_recyclerview);
+               RecyclerViewMessages = (RecyclerView) v;
+
+           }
+
        }
 
-        // meanwhile we checking server  in case there was additions.
+        // meanwhile we are checking server in case there was additions.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -238,20 +248,19 @@ public class AppActivity extends AppCompatActivity {
 
 
     public void AddContactTransfer(View view) {
-
-            Intent intent = new Intent(this, AddContactActivity.class);
+        Intent intent = new Intent(this, AddContactActivity.class);
         intent.putExtra("Token", Token_Bear);
         intent.putExtra("UserHost", user);
-            Launcher.launch(intent);
+        Launcher.launch(intent);
     }
 
 
     private void CheckUserList() {
-        Call<List<User>> call =api.getUsers();
+        Call<List<User>> call = api.getUsers();
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                 Users = response.body();
+                Users = response.body();
                 RecyclerView = findViewById(R.id.chats_recyclerview);
                 Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
                 RecyclerView.setAdapter(Adapter);
@@ -261,7 +270,7 @@ public class AppActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "An error has occurred", Toast.LENGTH_LONG).show();
 
             }
 
