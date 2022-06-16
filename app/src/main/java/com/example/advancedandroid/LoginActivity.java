@@ -49,9 +49,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-       //deleteDatabase("UserDB");
+      // deleteDatabase("UserDB");
        // deleteDatabase("ContactsDB");
-       // deleteDatabase("MessageDB");
+        //deleteDatabase("MessageDB");
         //finish();
         AppDB UserDatabase;
         UserDatabase = Room.databaseBuilder(getApplicationContext(), AppDB.class, "UserDB")

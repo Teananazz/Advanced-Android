@@ -82,20 +82,21 @@ public class AppActivity extends AppCompatActivity {
         DefineLauncher();
 
 
-
-
-
        Intent intent = getIntent();
        Token = intent.getStringExtra("Token");
        Token_Bear = "Bearer " + Token;
        user = intent.getStringExtra("User");
        api = RetrofitClient.getInstance().getMyApi();
 
+        // make it visible only if no contacts
+        EmptyIndicator = findViewById(R.id.tutorial);
+
+
         Current_Contacts = contactDao.index(user);
         if(Current_Contacts == null) {
             Current_Contacts = new ArrayList<Contact>();
         }
-        if(Adapter == null) {
+        if(Adapter == null && user!= null) {
               RecyclerView = findViewById(R.id.chats_recyclerview);
                          Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
                          RecyclerView.setAdapter(Adapter);
@@ -140,8 +141,6 @@ public class AppActivity extends AppCompatActivity {
         });
 
 
-        // make it visible only if no contacts
-         EmptyIndicator = findViewById(R.id.tutorial);
 
     }
 
@@ -256,6 +255,9 @@ public class AppActivity extends AppCompatActivity {
                              }
                              Current_Contacts.add(entry);
                              Adapter.notifyItemInserted(Current_Contacts.size() - 1);
+                             if(EmptyIndicator.getVisibility() == View.VISIBLE) {
+                                 EmptyIndicator.setVisibility(View.INVISIBLE);
+                             }
 
                          }
                      }
