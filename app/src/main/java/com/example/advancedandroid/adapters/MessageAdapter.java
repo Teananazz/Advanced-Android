@@ -16,20 +16,17 @@ import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
-      private List<Message> list;
-      // we can we two different xmls depending on who sent the message.
+    private List<Message> list;
+    // we can we two different xmls depending on who sent the message.
     private LayoutInflater MessageInflater;
 
     private static final int SENDING_MESSAGE = 1;
     private static final int RECEIVE_MESSAGE = 2;
 
 
-    public MessageAdapter(Context context,
-                          List<Message> List) {
+    public MessageAdapter(Context context, List<Message> List) {
         MessageInflater= LayoutInflater.from(context);
-
-         list = List;
-
+        list = List;
     }
 
     public MessageAdapter(List<Message> messagesList) {
@@ -40,7 +37,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @NonNull
     @Override
     public MessageAdapter.MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-         View ItemView;
+        View ItemView;
         if (viewType == SENDING_MESSAGE) {
              ItemView = MessageInflater.inflate(R.layout.sender_message, parent, false);
         }

@@ -114,13 +114,6 @@ public class AppActivity extends AppCompatActivity {
                }
            });
 
-           int orientation = getResources().getConfiguration().orientation;
-           if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-               // In landscape
-               View v = findViewById(R.id.contacts_recyclerview);
-               RecyclerViewMessages = (RecyclerView) v;
-
-           }
 
        }
 
@@ -262,10 +255,16 @@ public class AppActivity extends AppCompatActivity {
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 Users = response.body();
                 RecyclerView = findViewById(R.id.chats_recyclerview);
+                RecyclerViewMessages = findViewById(R.id.messages_recyclerview);
                 Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
                 RecyclerView.setAdapter(Adapter);
                 RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
+                int orientation = getResources().getConfiguration().orientation;
+                if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    // In landscape
+                    ContactAdapter.ContactViewHolder contactViewHolder = new ContactAdapter.ContactViewHolder(RecyclerViewMessages, Adapter);
+                    contactViewHolder.onClick(RecyclerViewMessages);
+                }
             }
 
             @Override
