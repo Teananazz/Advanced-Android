@@ -197,9 +197,14 @@ public class LoginActivity extends AppCompatActivity {
         String user = User.getText().toString();
         String pass = PassWord.getText().toString();
 
-        LoginAttempt(user, pass);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LoginAttempt(user, pass);
+            }
+        });
 
-        // if token is not null then login is successful.
+
 
     }
 

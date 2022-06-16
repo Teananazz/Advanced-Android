@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Required to maintain app compatibility. -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
+        android:maxSdkVersion="32"/>
 
 
     <!-- all below are required start at api level 33 for this program -->
