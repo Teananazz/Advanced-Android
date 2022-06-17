@@ -309,133 +309,136 @@ public class AppActivity extends AppCompatActivity {
 
                 int orientation = getResources().getConfiguration().orientation;
                 if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+                    // just for check
+                 //   List<Message> list = new List<Message>() {
+//                        @Override
+//                        public int size() {
+//                            return 0;
+//                        }
+//
+//                        @Override
+//                        public boolean isEmpty() {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean contains(@Nullable Object o) {
+//                            return false;
+//                        }
+//
+//                        @NonNull
+//                        @Override
+//                        public Iterator<Message> iterator() {
+//                            return null;
+//                        }
+//
+//                        @NonNull
+//                        @Override
+//                        public Object[] toArray() {
+//                            return new Object[0];
+//                        }
+//
+//                        @NonNull
+//                        @Override
+//                        public <T> T[] toArray(@NonNull T[] ts) {
+//                            return null;
+//                        }
+//
+//                        @Override
+//                        public boolean add(Message message) {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean remove(@Nullable Object o) {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean containsAll(@NonNull Collection<?> collection) {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean addAll(@NonNull Collection<? extends Message> collection) {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean addAll(int i, @NonNull Collection<? extends Message> collection) {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean removeAll(@NonNull Collection<?> collection) {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public boolean retainAll(@NonNull Collection<?> collection) {
+//                            return false;
+//                        }
+//
+//                        @Override
+//                        public void clear() {
+//
+//                        }
+//
+//                        @Override
+//                        public Message get(int i) {
+//                            return null;
+//                        }
+//
+//                        @Override
+//                        public Message set(int i, Message message) {
+//                            return null;
+//                        }
+//
+//                        @Override
+//                        public void add(int i, Message message) {
+//
+//                        }
+//
+//                        @Override
+//                        public Message remove(int i) {
+//                            return null;
+//                        }
+//
+//                        @Override
+//                        public int indexOf(@Nullable Object o) {
+//                            return 0;
+//                        }
+//
+//                        @Override
+//                        public int lastIndexOf(@Nullable Object o) {
+//                            return 0;
+//                        }
+//
+//                        @NonNull
+//                        @Override
+//                        public ListIterator<Message> listIterator() {
+//                            return null;
+//                        }
+//
+//                        @NonNull
+//                        @Override
+//                        public ListIterator<Message> listIterator(int i) {
+//                            return null;
+//                        }
+//
+//                        @NonNull
+//                        @Override
+//                        public List<Message> subList(int i, int i1) {
+//                            return null;
+//                        }
+//                    };
+                   // list.add(new Message());
+
                     // In landscape
                     RecyclerViewMessages = findViewById(R.id.messages_recyclerview);
-                    // just for check
-                    List<Message> list = new List<Message>() {
-                        @Override
-                        public int size() {
-                            return 0;
-                        }
-
-                        @Override
-                        public boolean isEmpty() {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean contains(@Nullable Object o) {
-                            return false;
-                        }
-
-                        @NonNull
-                        @Override
-                        public Iterator<Message> iterator() {
-                            return null;
-                        }
-
-                        @NonNull
-                        @Override
-                        public Object[] toArray() {
-                            return new Object[0];
-                        }
-
-                        @NonNull
-                        @Override
-                        public <T> T[] toArray(@NonNull T[] ts) {
-                            return null;
-                        }
-
-                        @Override
-                        public boolean add(Message message) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean remove(@Nullable Object o) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean containsAll(@NonNull Collection<?> collection) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean addAll(@NonNull Collection<? extends Message> collection) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean addAll(int i, @NonNull Collection<? extends Message> collection) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean removeAll(@NonNull Collection<?> collection) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean retainAll(@NonNull Collection<?> collection) {
-                            return false;
-                        }
-
-                        @Override
-                        public void clear() {
-
-                        }
-
-                        @Override
-                        public Message get(int i) {
-                            return null;
-                        }
-
-                        @Override
-                        public Message set(int i, Message message) {
-                            return null;
-                        }
-
-                        @Override
-                        public void add(int i, Message message) {
-
-                        }
-
-                        @Override
-                        public Message remove(int i) {
-                            return null;
-                        }
-
-                        @Override
-                        public int indexOf(@Nullable Object o) {
-                            return 0;
-                        }
-
-                        @Override
-                        public int lastIndexOf(@Nullable Object o) {
-                            return 0;
-                        }
-
-                        @NonNull
-                        @Override
-                        public ListIterator<Message> listIterator() {
-                            return null;
-                        }
-
-                        @NonNull
-                        @Override
-                        public ListIterator<Message> listIterator(int i) {
-                            return null;
-                        }
-
-                        @NonNull
-                        @Override
-                        public List<Message> subList(int i, int i1) {
-                            return null;
-                        }
-                    };
-                    list.add(new Message());
-                    messageAdapter = new MessageAdapter(getApplicationContext(), list);
+                    List<Message> List = new ArrayList<Message>();
+                    messageAdapter = new MessageAdapter(getApplicationContext(), List);
                     RecyclerViewMessages.setAdapter(messageAdapter);
                     RecyclerViewMessages.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 }
