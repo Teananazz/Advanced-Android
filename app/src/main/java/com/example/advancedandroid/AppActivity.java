@@ -197,7 +197,8 @@ public class AppActivity extends AppCompatActivity {
                 }
               else {
                      // this when we update potentially everyone if they changed info.
-                      Current_Contacts = ServerContacts;
+                     Current_Contacts.clear();
+                     Current_Contacts.addAll(ServerContacts);
                       Adapter.notifyDataSetChanged();
                  }
 
@@ -205,7 +206,6 @@ public class AppActivity extends AppCompatActivity {
                 if(!Current_Contacts.isEmpty()) {
                     db.contactDao().InsertAll(Current_Contacts);
                 }
-
 
                 if (Current_Contacts.size() > 0 && EmptyIndicator.getVisibility() == View.VISIBLE) {
                             EmptyIndicator.setVisibility(View.INVISIBLE);
@@ -302,10 +302,10 @@ public class AppActivity extends AppCompatActivity {
 
 
                 Users = response.body();
-                RecyclerView = findViewById(R.id.chats_recyclerview);
-                Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
-                RecyclerView.setAdapter(Adapter);
-                RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+               // RecyclerView = findViewById(R.id.chats_recyclerview);
+             //   Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
+               // RecyclerView.setAdapter(Adapter);
+               // RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
                 int orientation = getResources().getConfiguration().orientation;
                 if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
