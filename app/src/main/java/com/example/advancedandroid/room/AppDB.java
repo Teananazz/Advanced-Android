@@ -11,7 +11,8 @@ import com.example.advancedandroid.models.User;
 
 @Database(
         entities = {Contact.class, Message.class, User.class},
-        version = 1
+        version = 1,
+        exportSchema = false
 
 
 )

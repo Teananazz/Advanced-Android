@@ -67,94 +67,87 @@ public class AppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_appscreen);
-        String fire_token;
 
 
-        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
-                .allowMainThreadQueries()
-                .build();
-        contactDao = db.contactDao();
+        api = RetrofitClient.getInstance().getMyApi();
 
-
-      //  Current_Contacts = contactDao.index();
-        Users = db.UserDao().index();
-
-
-
+        // Launcher for add contact activity.
         DefineLauncher();
-
-
-
-
-
-       Intent intent = getIntent();
-       Token = intent.getStringExtra("Token");
-       Token_Bear = "Bearer " + Token;
-       user = intent.getStringExtra("User");
-       api = RetrofitClient.getInstance().getMyApi();
 
         // make it visible only if no contacts
         EmptyIndicator = findViewById(R.id.tutorial);
 
+        RecyclerView = findViewById(R.id.chats_recyclerview);
 
-        Current_Contacts = contactDao.index(user);
-        if(Current_Contacts == null) {
+        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
+                .allowMainThreadQueries()
+                .build();
 
-            Current_Contacts = new ArrayList<Contact>();
+        contactDao = db.contactDao();
+
+        Users = db.UserDao().index();
+
+        if(Users == null || Users.isEmpty() ) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Users = new ArrayList<User>();
+                    // if no accounts then it is not possible to get here unless UserDao is not updated.
+                    CheckUserList();
+                }
+            });
+
         }
-        if(Adapter == null && user!= null) {
-              RecyclerView = findViewById(R.id.chats_recyclerview);
-                         Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
-                         RecyclerView.setAdapter(Adapter);
-                         RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        }
 
 
+       Intent intent = getIntent();
+        if(intent.hasExtra("Token")) {
+            Token = intent.getStringExtra("Token");
+            Token_Bear = "Bearer " + Token;
+            user = intent.getStringExtra("User");
+            // we get firebase token.
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
 
-       if(user!= null) {
-           runOnUiThread(new Runnable() {
-               @Override
-               public void run() {
+                    FirebaseMessaging.getInstance().getToken()
+                            .addOnCompleteListener(new OnCompleteListener<String>() {
+                                @Override
+                                public void onComplete(@NonNull Task<String> task) {
+                                    // Get new FCM registration token
+                                    String token = task.getResult();
+                                    //  ((TextView)findViewById(R.id.Title)).setText(token);
 
-                   FirebaseMessaging.getInstance().getToken()
-                           .addOnCompleteListener(new OnCompleteListener<String>() {
-                               @Override
-                               public void onComplete(@NonNull Task<String> task) {
+                                    JoinFireBase(user, token);
+                                }
+                            });
+                }
+            });
+
+            Current_Contacts = contactDao.index(user);
+            if(Current_Contacts == null) {
+                Current_Contacts = new ArrayList<Contact>();
+            }
+            Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
+            RecyclerView.setAdapter(Adapter);
+            RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
 
-                                   // Get new FCM registration token
-                                   String token = task.getResult();
-                                 //  ((TextView)findViewById(R.id.Title)).setText(token);
-
-                                   JoinFireBase(user, token);
-
-                               }
-                           });
-               }
-           });
-
-       }
 
 
             // meanwhile we checking server  in case there was additions.
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
-                    CheckUserList();
                     getContacts(Token);
+                    CheckUserList();
                 }
             });
-
-
-
-
-
-
-
-
-
-
+        }
+        else {
+            // if no Token then it is not possible to be at appactivity.
+            finish();
+        }
     }
 
 
@@ -168,26 +161,44 @@ public class AppActivity extends AppCompatActivity {
             public void onResponse(Call<List<Contact>> call , Response<List<Contact>> response) {
 
                 List<Contact> ServerContacts = response.body();
-                if(ServerContacts == null) {
+                if(ServerContacts == null ) {
                     ServerContacts = new ArrayList<Contact>();
                 }
+
                  if(ServerContacts.size() > 0) {
+
                     for(int  i = 0 ; i< ServerContacts.size() ; i++) {
                         ServerContacts.get(i).setUsernameOfLooker(user);
                     }
                 }
 
+                 if(Current_Contacts.isEmpty() && ServerContacts.size() == 1) {
+                     int size = 0;
+                     Current_Contacts.add(ServerContacts.get(0));
+                     Adapter.notifyItemInserted(0);
 
-               if(ServerContacts.size() > Current_Contacts.size()) {
+                 }
+                 // if we just added a contact
+              else if(ServerContacts.size() == (Current_Contacts.size() + 1) ) {
                      int size = Current_Contacts.size();
-                    Current_Contacts = ServerContacts;
-                    Adapter.notifyItemRangeChanged(size, Current_Contacts.size() - 1);
-                }
+                     int size2 = ServerContacts.size();
+                     Current_Contacts.add(ServerContacts.get(size2 - 1));
+                    Adapter.notifyItemInserted(size2 - 1);
 
+                }
+              else {
+                     // this when we update potentially everyone if they changed info.
+                      Current_Contacts = ServerContacts;
+                      Adapter.notifyDataSetChanged();
+                 }
+
+               // we use Insert all because replace policy is replace in case details were updated.
                 if(!Current_Contacts.isEmpty()) {
                     db.contactDao().InsertAll(Current_Contacts);
                 }
-                if (EmptyIndicator.getVisibility() == View.VISIBLE) {
+
+
+                if (Current_Contacts.size() > 0 && EmptyIndicator.getVisibility() == View.VISIBLE) {
                             EmptyIndicator.setVisibility(View.INVISIBLE);
                 }
 
@@ -195,44 +206,6 @@ public class AppActivity extends AppCompatActivity {
                              // if no contacts then we show hint to add contact.
                     EmptyIndicator.setVisibility(View.VISIBLE);
                 }
-
-
-
-
-
-//                 if(RecyclerView != null ) {
-//
-//                     if(Current_Contacts.size() < response.body().size()) {
-//                         Current_Contacts = response.body();
-//                         Adapter.notifyDataSetChanged();
-//                     }
-//
-//                 }
-//              else {
-//
-//                     Current_Contacts = response.body();
-//                     if (Current_Contacts != null) {
-//                         // we start caring about recycler view when there is contacts to show.
-//                       //  RecyclerView = findViewById(R.id.chats_recyclerview);
-//                        // Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
-//                       //  RecyclerView.setAdapter(Adapter);
-//                        // RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-//
-//                         // first we take down the add contact promt.
-//                         if (EmptyIndicator.getVisibility() == View.VISIBLE) {
-//                             EmptyIndicator.setVisibility(View.INVISIBLE);
-//                         }
-//
-//
-//                     } else {
-//                         // if no contacts then we show hint to add contact.
-//                         if (EmptyIndicator.getVisibility() == View.INVISIBLE) {
-//                             EmptyIndicator.setVisibility(View.VISIBLE);
-//                         }
-//
-//                     }
-//
-//                 }
 
 
             }
@@ -274,6 +247,7 @@ public class AppActivity extends AppCompatActivity {
                                  Current_Contacts = new ArrayList<Contact>();
                              }
                              Current_Contacts.add(entry);
+                             contactDao.insert(entry);
                              Adapter.notifyItemInserted(Current_Contacts.size() - 1);
                              if(EmptyIndicator.getVisibility() == View.VISIBLE) {
                                  EmptyIndicator.setVisibility(View.INVISIBLE);
@@ -299,19 +273,29 @@ public class AppActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                Users = response.body();
-                RecyclerView = findViewById(R.id.chats_recyclerview);
-                RecyclerViewMessages = findViewById(R.id.messages_recyclerview);
-                Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
-                RecyclerView.setAdapter(Adapter);
-                RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+                List<User> res = response.body();
+                if(res == null) {
+                    res = new ArrayList<User>();
+                }
+
+               if(Users.size() < res.size()) {
+                   Users = res;
+
+               }
+
+               if(Users.size() > 0) {
+                   // because of policy of replacement only on certain cases we don't have to worry.
+                   // also we might replace because there could be updates on img and stuff.
+                   db.UserDao().insertAll(res);
+               }
+
                 int orientation = getResources().getConfiguration().orientation;
                 if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     // In landscape
                     ContactAdapter.ContactViewHolder contactViewHolder = new ContactAdapter.ContactViewHolder(RecyclerViewMessages, Adapter);
                     contactViewHolder.onClick(RecyclerViewMessages);
                 }
-
             }
 
             @Override
@@ -319,7 +303,6 @@ public class AppActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
 
             }
-
         });
     }
 

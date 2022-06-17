@@ -265,9 +265,10 @@ public class MessagingActivity extends AppCompatActivity {
 
     public void Backbtn(View view) {
 
-        Intent intent = new Intent(getApplicationContext(), AppActivity.class);
+      //  Intent intent = new Intent(getApplicationContext(), AppActivity.class);
 
-        startActivity(intent);
+       // startActivity(intent);
+        finish();
 
     }
 }

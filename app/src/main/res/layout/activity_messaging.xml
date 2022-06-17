@@ -30,7 +30,9 @@
             android:layout_marginStart="-14dp"
             android:padding="3dp"
             android:src="@drawable/ic_baseline_keyboard_arrow_left_24"
-            android:contentDescription="UserProfilePicture" />
+            android:contentDescription="UserProfilePicture"
+            android:onClick="Backbtn"
+            />
 
         <androidx.cardview.widget.CardView
             android:layout_width="44dp"
@@ -39,7 +41,7 @@
             android:layout_toRightOf="@+id/back_btn"
             android:id="@+id/parent_image_view"
             app:cardCornerRadius="22dp"
-            android:onClick="Backbtn"
+
             >
             <ImageView
                 android:layout_height="44dp"

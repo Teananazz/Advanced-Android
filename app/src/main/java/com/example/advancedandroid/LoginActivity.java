@@ -63,10 +63,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-     //  deleteDatabase("UserDB");
-       // deleteDatabase("ContactsDB");
+       //deleteDatabase("UserDB");
+       //deleteDatabase("ContactsDB");
        // deleteDatabase("MessageDB");
-       // finish();
+      //  finish();
         AppDB UserDatabase;
         UserDatabase = Room.databaseBuilder(getApplicationContext(), AppDB.class, "UserDB")
                 .allowMainThreadQueries()
@@ -76,14 +76,15 @@ public class LoginActivity extends AppCompatActivity {
 
         Users = UserDao.index();
 
-
-
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
                 // we update the User list.
-                CheckUserList("", 1);
+                CheckUserList("", 1);;
+            }
+        });
 
         // this intent is for checking if user exists
-        // TODO: this is very bad way to check which intent we are here for.
-        // TODO: better to send a flag which will indicate where we came from.
         Intent intent = getIntent();
         if(intent != null) {
             String userCheck = intent.getStringExtra("UserNameCheck");
@@ -137,8 +138,6 @@ public class LoginActivity extends AppCompatActivity {
 
         });
     }
-
-
     private void RequestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
@@ -178,9 +177,6 @@ public class LoginActivity extends AppCompatActivity {
             }
 
 
-
-
-
     public void LoginAttempting(View view) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -205,11 +201,15 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if(Users != null) {
+                    UserDao.insertAll(Users);
+                }
                  Users = response.body();
                 UserDao.insertAll(Users);
 
              if( flag == 2) {
 
+                 UserDao.insertAll(Users);
                  String[] UserNames = new String[Users.size()];
                  int i;
                  for ( i = 0; i < Users.size(); i++) {
