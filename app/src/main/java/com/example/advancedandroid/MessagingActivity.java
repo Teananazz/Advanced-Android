@@ -146,6 +146,17 @@ public class MessagingActivity extends AppCompatActivity {
                      messages.scrollToPosition(Adapter.getItemCount()-1);
                  }
                  else {
+
+                     List<Message> list = response.body();
+
+                     if(list != null && MessageList!= null) {
+                         if(list.size() > MessageList.size()) {
+                             int size = list.size();
+                             MessageList = response.body();
+                             Adapter.notifyItemRangeChanged(size, MessageList.size() - 1);
+                         }
+                     }
+
                      MessageList = response.body();
 
                          if (Adapter == null ) {
@@ -156,7 +167,7 @@ public class MessagingActivity extends AppCompatActivity {
 
                      }
 
-                     MessageList = response.body();
+
 
                  }
 
