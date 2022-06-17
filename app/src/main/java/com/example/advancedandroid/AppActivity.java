@@ -15,25 +15,33 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Dao;
 import androidx.room.Room;
 
 import com.example.advancedandroid.adapters.ContactAdapter;
+import com.example.advancedandroid.adapters.MessageAdapter;
 import com.example.advancedandroid.api.Api;
 import com.example.advancedandroid.api.RetrofitClient;
 import com.example.advancedandroid.models.Contact;
+import com.example.advancedandroid.models.Message;
 import com.example.advancedandroid.models.User;
 import com.example.advancedandroid.room.AppDB;
 import com.example.advancedandroid.room.ContactDao;
+import com.example.advancedandroid.room.MessageDao;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,6 +59,7 @@ public class AppActivity extends AppCompatActivity {
     private RecyclerView RecyclerView = null;
     private RecyclerView RecyclerViewMessages = null;
     private ContactAdapter Adapter;
+    private MessageAdapter messageAdapter;
     private AppDB db;
     private ContactDao contactDao;
     private List<Contact> contacts;
@@ -274,6 +283,7 @@ public class AppActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
 
+
                 List<User> res = response.body();
                 if(res == null) {
                     res = new ArrayList<User>();
@@ -290,17 +300,150 @@ public class AppActivity extends AppCompatActivity {
                    db.UserDao().insertAll(res);
                }
 
+
+                Users = response.body();
+                RecyclerView = findViewById(R.id.chats_recyclerview);
+                Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
+                RecyclerView.setAdapter(Adapter);
+                RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
                 int orientation = getResources().getConfiguration().orientation;
                 if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     // In landscape
-                    ContactAdapter.ContactViewHolder contactViewHolder = new ContactAdapter.ContactViewHolder(RecyclerViewMessages, Adapter);
-                    contactViewHolder.onClick(RecyclerViewMessages);
+                    RecyclerViewMessages = findViewById(R.id.messages_recyclerview);
+                    // just for check
+                    List<Message> list = new List<Message>() {
+                        @Override
+                        public int size() {
+                            return 0;
+                        }
+
+                        @Override
+                        public boolean isEmpty() {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean contains(@Nullable Object o) {
+                            return false;
+                        }
+
+                        @NonNull
+                        @Override
+                        public Iterator<Message> iterator() {
+                            return null;
+                        }
+
+                        @NonNull
+                        @Override
+                        public Object[] toArray() {
+                            return new Object[0];
+                        }
+
+                        @NonNull
+                        @Override
+                        public <T> T[] toArray(@NonNull T[] ts) {
+                            return null;
+                        }
+
+                        @Override
+                        public boolean add(Message message) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean remove(@Nullable Object o) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean containsAll(@NonNull Collection<?> collection) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean addAll(@NonNull Collection<? extends Message> collection) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean addAll(int i, @NonNull Collection<? extends Message> collection) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean removeAll(@NonNull Collection<?> collection) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean retainAll(@NonNull Collection<?> collection) {
+                            return false;
+                        }
+
+                        @Override
+                        public void clear() {
+
+                        }
+
+                        @Override
+                        public Message get(int i) {
+                            return null;
+                        }
+
+                        @Override
+                        public Message set(int i, Message message) {
+                            return null;
+                        }
+
+                        @Override
+                        public void add(int i, Message message) {
+
+                        }
+
+                        @Override
+                        public Message remove(int i) {
+                            return null;
+                        }
+
+                        @Override
+                        public int indexOf(@Nullable Object o) {
+                            return 0;
+                        }
+
+                        @Override
+                        public int lastIndexOf(@Nullable Object o) {
+                            return 0;
+                        }
+
+                        @NonNull
+                        @Override
+                        public ListIterator<Message> listIterator() {
+                            return null;
+                        }
+
+                        @NonNull
+                        @Override
+                        public ListIterator<Message> listIterator(int i) {
+                            return null;
+                        }
+
+                        @NonNull
+                        @Override
+                        public List<Message> subList(int i, int i1) {
+                            return null;
+                        }
+                    };
+                    list.add(new Message());
+                    messageAdapter = new MessageAdapter(getApplicationContext(), list);
+                    RecyclerViewMessages.setAdapter(messageAdapter);
+                    RecyclerViewMessages.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 }
             }
 
             @Override
             public void onFailure(Call<List<User>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "An error has occurred", Toast.LENGTH_LONG).show();
 
             }
         });
