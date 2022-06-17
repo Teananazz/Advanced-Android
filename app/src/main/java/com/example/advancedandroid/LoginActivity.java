@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // we use this launcher in order to get permissions for api>=33 and others we might might need.
     private ActivityResultLauncher<String[]> requestPermissionLauncher ;
-    private ActivityResultLauncher<String> requestMultiplePermissionLauncher;
+
 
     // only in api 33
     private final int REQUEST_PERMISSION_POST_NOTIFICATIONS=1;
@@ -63,20 +63,24 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-      // deleteDatabase("UserDB");
+     //  deleteDatabase("UserDB");
        // deleteDatabase("ContactsDB");
-        //deleteDatabase("MessageDB");
-        //finish();
+       // deleteDatabase("MessageDB");
+       // finish();
         AppDB UserDatabase;
         UserDatabase = Room.databaseBuilder(getApplicationContext(), AppDB.class, "UserDB")
-                .allowMainThreadQueries().fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
                 .build();
 
         UserDao = UserDatabase.UserDao();
 
         Users = UserDao.index();
-         // we update the User list.
-        CheckUserList("", 1);
+
+
+
+                // we update the User list.
+                CheckUserList("", 1);
+
         // this intent is for checking if user exists
         // TODO: this is very bad way to check which intent we are here for.
         // TODO: better to send a flag which will indicate where we came from.
@@ -177,17 +181,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     public void LoginAttempting(View view) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -203,8 +196,6 @@ public class LoginActivity extends AppCompatActivity {
                 LoginAttempt(user, pass);
             }
         });
-
-
 
     }
 

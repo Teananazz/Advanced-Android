@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,9 @@ import android.widget.Toast;
 
 import com.example.advancedandroid.api.Api;
 import com.example.advancedandroid.api.RetrofitClient;
+import com.example.advancedandroid.models.User;
+import com.example.advancedandroid.room.AppDB;
+import com.example.advancedandroid.room.UserDao;
 
 
 import java.io.ByteArrayOutputStream;
@@ -60,8 +64,14 @@ public class RegisterActivity extends AppCompatActivity {
     private Bitmap ImageSaved;
     private Bitmap check;
 
+    private UserDao userDaoInstance;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
@@ -70,6 +80,12 @@ public class RegisterActivity extends AppCompatActivity {
         username = findViewById(R.id.userName1);
         displayname = findViewById(R.id.displayName);
 
+        AppDB UserDatabase;
+        UserDatabase = Room.databaseBuilder(getApplicationContext(), AppDB.class, "UserDB")
+                .allowMainThreadQueries()
+                .build();
+
+        userDaoInstance = UserDatabase.UserDao();
 
         defineImageLuncher();
         defineUserCheckLauncher();
@@ -182,6 +198,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                 // successful creation
                 if(response.code() == 200) {
+
+
+                    User Entry = new User(user, img);
+                    userDaoInstance.insert(Entry);
 
                     runOnUiThread(new Runnable() {
                         @Override

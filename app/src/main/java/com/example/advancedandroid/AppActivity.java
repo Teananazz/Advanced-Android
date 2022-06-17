@@ -71,7 +71,7 @@ public class AppActivity extends AppCompatActivity {
 
 
         db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
-                .allowMainThreadQueries().fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
                 .build();
         contactDao = db.contactDao();
 
@@ -82,6 +82,9 @@ public class AppActivity extends AppCompatActivity {
 
 
         DefineLauncher();
+
+
+
 
 
        Intent intent = getIntent();
@@ -96,6 +99,7 @@ public class AppActivity extends AppCompatActivity {
 
         Current_Contacts = contactDao.index(user);
         if(Current_Contacts == null) {
+
             Current_Contacts = new ArrayList<Contact>();
         }
         if(Adapter == null && user!= null) {
@@ -104,6 +108,8 @@ public class AppActivity extends AppCompatActivity {
                          RecyclerView.setAdapter(Adapter);
                          RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         }
+
+
 
        if(user!= null) {
            runOnUiThread(new Runnable() {
@@ -130,17 +136,22 @@ public class AppActivity extends AppCompatActivity {
        }
 
 
+            // meanwhile we checking server  in case there was additions.
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    CheckUserList();
+                    getContacts(Token);
+                }
+            });
 
 
-        // meanwhile we checking server  in case there was additions.
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
 
-                CheckUserList();
-                getContacts(Token);
-            }
-        });
+
+
+
+
 
 
 
@@ -157,27 +168,34 @@ public class AppActivity extends AppCompatActivity {
             public void onResponse(Call<List<Contact>> call , Response<List<Contact>> response) {
 
                 List<Contact> ServerContacts = response.body();
-
-                if(ServerContacts!=null) {
+                if(ServerContacts == null) {
+                    ServerContacts = new ArrayList<Contact>();
+                }
+                 if(ServerContacts.size() > 0) {
                     for(int  i = 0 ; i< ServerContacts.size() ; i++) {
                         ServerContacts.get(i).setUsernameOfLooker(user);
                     }
                 }
-                Current_Contacts = ServerContacts;
-                if(Current_Contacts != null) {
+
+
+               if(ServerContacts.size() > Current_Contacts.size()) {
+                     int size = Current_Contacts.size();
+                    Current_Contacts = ServerContacts;
+                    Adapter.notifyItemRangeChanged(size, Current_Contacts.size() - 1);
+                }
+
+                if(!Current_Contacts.isEmpty()) {
                     db.contactDao().InsertAll(Current_Contacts);
                 }
-                         if (EmptyIndicator.getVisibility() == View.VISIBLE) {
+                if (EmptyIndicator.getVisibility() == View.VISIBLE) {
                             EmptyIndicator.setVisibility(View.INVISIBLE);
-                         }
+                }
 
-                         if(Current_Contacts == null || Current_Contacts.isEmpty() && EmptyIndicator.getVisibility() == View.INVISIBLE) {
+                if( Current_Contacts.isEmpty() && EmptyIndicator.getVisibility() == View.INVISIBLE) {
                              // if no contacts then we show hint to add contact.
-                             EmptyIndicator.setVisibility(View.VISIBLE);
-                         }
-                         if(Current_Contacts == null) {
-                             Current_Contacts = new ArrayList<Contact>();
-                         }
+                    EmptyIndicator.setVisibility(View.VISIBLE);
+                }
+
 
 
 

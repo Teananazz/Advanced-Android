@@ -20,7 +20,7 @@ import java.util.List;
         @Query("SELECT * FROM User WHERE userName = :user")
         User get(String user);
 
-        @Insert
+        @Insert (onConflict = OnConflictStrategy.REPLACE)
         void insert(User... users);
 
         // replacing in case of change.
