@@ -378,11 +378,25 @@ public class AppActivity extends AppCompatActivity {
 
                 Users = response.body();
                // RecyclerView = findViewById(R.id.chats_recyclerview);
-             //   Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
+               // Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
                // RecyclerView.setAdapter(Adapter);
                // RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
 
+
+
+
+                int orientation = getResources().getConfiguration().orientation;
+                if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    // In landscape
+
+                    // just for check
+                    RecyclerViewMessages = findViewById(R.id.messages_recyclerview);
+                    List<Message> List = new ArrayList<Message>();
+                    messageAdapter = new MessageAdapter(getApplicationContext(), List);
+                    RecyclerViewMessages.setAdapter(messageAdapter);
+                    RecyclerViewMessages.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                }
 
             }
 
