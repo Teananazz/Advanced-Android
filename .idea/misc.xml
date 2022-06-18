@@ -51,8 +51,11 @@
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/activity_settings.xml" value="0.20262919310970082" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/chat_bubble_outgoing.xml" value="0.24682971014492755" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/chats_list_items.xml" value="0.24682971014492755" />
+        <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/contactsfragment.xml" value="0.24242424242424243" />
+        <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/empty_screen.xml" value="0.1" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/group_list_item.xml" value="0.33" />
-        <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/main_appscreen.xml" value="0.25" />
+        <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/main_appscreen.xml" value="0.12" />
+        <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/messagingfragment.xml" value="0.358695652173913" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/receiver_message.xml" value="0.33" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/sender_message.xml" value="0.5" />
         <entry key="..\:/Users/Snir Naasa/AndroidStudioProjects/AdvancedAndroid/app/src/main/res/layout/test.xml" value="0.22" />

@@ -1,11 +1,15 @@
 package com.example.advancedandroid;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,55 +52,84 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AppActivity extends AppCompatActivity {
-    private String Token;
-    private String Token_Bear; // Token with bear string before it.
-    private String user;
-    private Api api;
-    private View EmptyIndicator;
 
-    private List<Contact> Current_Contacts;
-    private List<User> Users;
-    private RecyclerView RecyclerView = null;
-    private RecyclerView RecyclerViewMessages = null;
-    private ContactAdapter Adapter;
-    private MessageAdapter messageAdapter;
-    private AppDB db;
-    private ContactDao contactDao;
-    private List<Contact> contacts;
-    private ContactAdapter contactAdapter;
+    // for now they are all public since we access them in other fragments.
+    // later will probably change to have getters setters.
+    public String Token;
+    public String Token_Bear; // Token with bear string before it.
+    public String user;
+    public Api api;
+    public View EmptyIndicator;
+
+    public List<Contact> Current_Contacts;
+    public List<User> Users;
+    public RecyclerView RecyclerView = null;
+    public RecyclerView RecyclerViewMessages = null;
+    public ContactAdapter Adapter;
+    public MessageAdapter AdapterMess;
+    public AppDB db;
+    public AppDB dbMess;
+
+    public ContactDao contactDao;
+    public List<Contact> contacts;
+    public ContactAdapter contactAdapter;
+    public MessageAdapter messageAdapter;
+
+
+    // this is for Message/Contact adapter difference.
+    public String UserChoosen;
+    public String NickNameChoose;
+    public String ServerChosen;
+    public List<Message> messageList;
+
+
+    // this is not null if a message was sent.
+    public String messageSend = null;
+
+    public String Orientation;
 
 
 
-    ActivityResultLauncher<Intent> Launcher;
+
+    public BroadcastReceiver NotificationGetter;
+    public ActivityResultLauncher<Intent> Launcher;
+    public Bitmap imgContact;
+
+
+
+
+
+
+
 
     // This is launcher for contact adding screen - so we can know the added contact.
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_appscreen);
 
-
         api = RetrofitClient.getInstance().getMyApi();
 
         // Launcher for add contact activity.
         DefineLauncher();
 
-        // make it visible only if no contacts
-        EmptyIndicator = findViewById(R.id.tutorial);
 
-        RecyclerView = findViewById(R.id.chats_recyclerview);
+
+
 
         db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "ContactDB")
                 .allowMainThreadQueries()
                 .build();
-
+         dbMess = Room.databaseBuilder(getApplicationContext(), AppDB.class, "MessageDB")
+                .allowMainThreadQueries()
+                .build();
         contactDao = db.contactDao();
 
         Users = db.UserDao().index();
 
-        if(Users == null || Users.isEmpty() ) {
+
+        if (Users == null || Users.isEmpty()) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -109,16 +142,51 @@ public class AppActivity extends AppCompatActivity {
         }
 
 
-       Intent intent = getIntent();
-        if(intent.hasExtra("Token")) {
+        Intent intent = getIntent();
+        if (intent.hasExtra("Token")) {
+
             Token = intent.getStringExtra("Token");
             Token_Bear = "Bearer " + Token;
             user = intent.getStringExtra("User");
+
+              Current_Contacts = contactDao.index(user);
+            // null only on first time.
+            if (savedInstanceState == null) {
+
+
+                int orientation = getResources().getConfiguration().orientation;
+                if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    Orientation="LANDSCAPE";
+                    // In landscape
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .add(R.id.fragment_container_view2, ContactsFragment.class, null)
+                            .commit();
+
+
+                    // in the beginning the second container is empty ( when no contacts has been clicked on).
+                    // this is changed when click in contact adapter.
+
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .add(R.id.fragment_container_view, EmptyFragment.class, null)
+                            .commit();
+
+                } else {
+                    Orientation="PORTRAIT";
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .add(R.id.fragment_container_view, ContactsFragment.class, null)
+                            .commit();
+                    // In portrait
+                }
+
+            }
+
             // we get firebase token.
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
                     FirebaseMessaging.getInstance().getToken()
                             .addOnCompleteListener(new OnCompleteListener<String>() {
                                 @Override
@@ -133,105 +201,112 @@ public class AppActivity extends AppCompatActivity {
                 }
             });
 
-            Current_Contacts = contactDao.index(user);
-            if(Current_Contacts == null) {
-                Current_Contacts = new ArrayList<Contact>();
-            }
-            Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
-            RecyclerView.setAdapter(Adapter);
-            RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-
-
-
-            // meanwhile we checking server  in case there was additions.
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    getContacts(Token);
-                    CheckUserList();
-                }
-            });
         }
         else {
-            // if no Token then it is not possible to be at appactivity.
             finish();
         }
-    }
+
+
+          //  Current_Contacts = contactDao.index(user);
+       //     if(Current_Contacts == null) {
+       //         Current_Contacts = new ArrayList<Contact>();
+       //  }
+         //   Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
+        //    RecyclerView.setAdapter(Adapter);
+          //  RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
 
 
-
-    void getContacts(String Token) {
-
-        Call<List<Contact>>  call = api.GetContacts(Token_Bear);
-        call.enqueue(new Callback<List<Contact>>() {
-            @Override
-            public void onResponse(Call<List<Contact>> call , Response<List<Contact>> response) {
-
-                List<Contact> ServerContacts = response.body();
-                if(ServerContacts == null ) {
-                    ServerContacts = new ArrayList<Contact>();
-                }
-
-                 if(ServerContacts.size() > 0) {
-
-                    for(int  i = 0 ; i< ServerContacts.size() ; i++) {
-                        ServerContacts.get(i).setUsernameOfLooker(user);
-                    }
-                }
-
-                 if(Current_Contacts.isEmpty() && ServerContacts.size() == 1) {
-                     int size = 0;
-                     Current_Contacts.add(ServerContacts.get(0));
-                     Adapter.notifyItemInserted(0);
-
-                 }
-                 // if we just added a contact
-              else if(ServerContacts.size() == (Current_Contacts.size() + 1) ) {
-                     int size = Current_Contacts.size();
-                     int size2 = ServerContacts.size();
-                     Current_Contacts.add(ServerContacts.get(size2 - 1));
-                    Adapter.notifyItemInserted(size2 - 1);
-
-                }
-              else {
-                     // this when we update potentially everyone if they changed info.
-                     Current_Contacts.clear();
-                     Current_Contacts.addAll(ServerContacts);
-                      Adapter.notifyDataSetChanged();
-                 }
-
-               // we use Insert all because replace policy is replace in case details were updated.
-                if(!Current_Contacts.isEmpty()) {
-                    db.contactDao().InsertAll(Current_Contacts);
-                }
-
-                if (Current_Contacts.size() > 0 && EmptyIndicator.getVisibility() == View.VISIBLE) {
-                            EmptyIndicator.setVisibility(View.INVISIBLE);
-                }
-
-                if( Current_Contacts.isEmpty() && EmptyIndicator.getVisibility() == View.INVISIBLE) {
-                             // if no contacts then we show hint to add contact.
-                    EmptyIndicator.setVisibility(View.VISIBLE);
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Contact>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "An error has occurred", Toast.LENGTH_LONG).show();
-                Log.d("Error222: ", t.toString());
-            }
-
-        });
+//
+//            // meanwhile we checking server  in case there was additions.
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    getContacts(Token);
+//                    CheckUserList();
+//                }
+//            });
+//        }
+//        else {
+//            // if no Token then it is not possible to be at appactivity.
+//            finish();
+//        }
+        }
 
 
 
 
 
-    }
+//    void getContacts(String Token) {
+//
+//        Call<List<Contact>>  call = api.GetContacts(Token_Bear);
+//        call.enqueue(new Callback<List<Contact>>() {
+//            @Override
+//            public void onResponse(Call<List<Contact>> call , Response<List<Contact>> response) {
+//
+//                List<Contact> ServerContacts = response.body();
+//                if(ServerContacts == null ) {
+//                    ServerContacts = new ArrayList<Contact>();
+//                }
+//
+//                 if(ServerContacts.size() > 0) {
+//
+//                    for(int  i = 0 ; i< ServerContacts.size() ; i++) {
+//                        ServerContacts.get(i).setUsernameOfLooker(user);
+//                    }
+//                }
+//
+//                 if(Current_Contacts.isEmpty() && ServerContacts.size() == 1) {
+//                     int size = 0;
+//                     Current_Contacts.add(ServerContacts.get(0));
+//                     Adapter.notifyItemInserted(0);
+//
+//                 }
+//                 // if we just added a contact
+//              else if(ServerContacts.size() == (Current_Contacts.size() + 1) ) {
+//                     int size = Current_Contacts.size();
+//                     int size2 = ServerContacts.size();
+//                     Current_Contacts.add(ServerContacts.get(size2 - 1));
+//                    Adapter.notifyItemInserted(size2 - 1);
+//
+//                }
+//              else {
+//                     // this when we update potentially everyone if they changed info.
+//                     Current_Contacts.clear();
+//                     Current_Contacts.addAll(ServerContacts);
+//                      Adapter.notifyDataSetChanged();
+//                 }
+//
+//               // we use Insert all because replace policy is replace in case details were updated.
+//                if(!Current_Contacts.isEmpty()) {
+//                    db.contactDao().InsertAll(Current_Contacts);
+//                }
+//
+//                if (Current_Contacts.size() > 0 && EmptyIndicator.getVisibility() == View.VISIBLE) {
+//                            EmptyIndicator.setVisibility(View.INVISIBLE);
+//                }
+//
+//                if( Current_Contacts.isEmpty() && EmptyIndicator.getVisibility() == View.INVISIBLE) {
+//                             // if no contacts then we show hint to add contact.
+//                    EmptyIndicator.setVisibility(View.VISIBLE);
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Contact>> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "An error has occurred", Toast.LENGTH_LONG).show();
+//                Log.d("Error222: ", t.toString());
+//            }
+//
+//        });
+//
+//
+//
+//
+//
+//    }
 
      void DefineLauncher() {
 
@@ -277,7 +352,7 @@ public class AppActivity extends AppCompatActivity {
     }
 
 
-    private void CheckUserList() {
+          public void CheckUserList() {
         Call<List<User>> call =api.getUsers();
         call.enqueue(new Callback<List<User>>() {
             @Override
@@ -307,141 +382,8 @@ public class AppActivity extends AppCompatActivity {
                // RecyclerView.setAdapter(Adapter);
                // RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-                int orientation = getResources().getConfiguration().orientation;
-                if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-                    // just for check
-                 //   List<Message> list = new List<Message>() {
-//                        @Override
-//                        public int size() {
-//                            return 0;
-//                        }
-//
-//                        @Override
-//                        public boolean isEmpty() {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean contains(@Nullable Object o) {
-//                            return false;
-//                        }
-//
-//                        @NonNull
-//                        @Override
-//                        public Iterator<Message> iterator() {
-//                            return null;
-//                        }
-//
-//                        @NonNull
-//                        @Override
-//                        public Object[] toArray() {
-//                            return new Object[0];
-//                        }
-//
-//                        @NonNull
-//                        @Override
-//                        public <T> T[] toArray(@NonNull T[] ts) {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public boolean add(Message message) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean remove(@Nullable Object o) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean containsAll(@NonNull Collection<?> collection) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean addAll(@NonNull Collection<? extends Message> collection) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean addAll(int i, @NonNull Collection<? extends Message> collection) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean removeAll(@NonNull Collection<?> collection) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public boolean retainAll(@NonNull Collection<?> collection) {
-//                            return false;
-//                        }
-//
-//                        @Override
-//                        public void clear() {
-//
-//                        }
-//
-//                        @Override
-//                        public Message get(int i) {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public Message set(int i, Message message) {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public void add(int i, Message message) {
-//
-//                        }
-//
-//                        @Override
-//                        public Message remove(int i) {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public int indexOf(@Nullable Object o) {
-//                            return 0;
-//                        }
-//
-//                        @Override
-//                        public int lastIndexOf(@Nullable Object o) {
-//                            return 0;
-//                        }
-//
-//                        @NonNull
-//                        @Override
-//                        public ListIterator<Message> listIterator() {
-//                            return null;
-//                        }
-//
-//                        @NonNull
-//                        @Override
-//                        public ListIterator<Message> listIterator(int i) {
-//                            return null;
-//                        }
-//
-//                        @NonNull
-//                        @Override
-//                        public List<Message> subList(int i, int i1) {
-//                            return null;
-//                        }
-//                    };
-                   // list.add(new Message());
 
-                    // In landscape
-                    RecyclerViewMessages = findViewById(R.id.messages_recyclerview);
-                    List<Message> List = new ArrayList<Message>();
-                    messageAdapter = new MessageAdapter(getApplicationContext(), List);
-                    RecyclerViewMessages.setAdapter(messageAdapter);
-                    RecyclerViewMessages.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                }
             }
 
             @Override

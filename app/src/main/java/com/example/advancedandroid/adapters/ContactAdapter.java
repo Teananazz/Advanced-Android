@@ -2,10 +2,12 @@ package com.example.advancedandroid.adapters;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.advancedandroid.AppActivity;
+import com.example.advancedandroid.ContactsFragment;
 import com.example.advancedandroid.MessagingActivity;
+import com.example.advancedandroid.MessagingFragment;
 import com.example.advancedandroid.R;
 import com.example.advancedandroid.models.Contact;
 import com.example.advancedandroid.models.User;
@@ -144,17 +149,40 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
         @Override
         public void onClick(View view) {
+            AppActivity App;
+            App= (AppActivity) AppContext;
 
+          if(App.Orientation.equals("PORTRAIT")) {
+              App.UserChoosen = UserName;
+              App.NickNameChoose = item_chatname.getText().toString();
+              App.ServerChosen = Server;
+              App.imgContact = ((BitmapDrawable)img.getDrawable()).getBitmap();
+              App.getSupportFragmentManager().beginTransaction()
+                      .setReorderingAllowed(true)
+                      .replace(R.id.fragment_container_view, MessagingFragment.class, null)
+                      .commit();
 
-            Intent TransferApp = new Intent(AppContext.getApplicationContext(), MessagingActivity.class);
-            TransferApp.addFlags(FLAG_ACTIVITY_NEW_TASK); // must be added else you can't start activity from non-activity.
-            TransferApp.putExtra("Token", mAdapter.Token_bear);
-            TransferApp.putExtra("Nickname", item_chatname.getText().toString());
-            TransferApp.putExtra("UserName", UserName);
-            TransferApp.putExtra("HostUser", UserNameHost);
-            TransferApp.putExtra("Server", Server);
-            AppContext.getApplicationContext().startActivity(TransferApp);
+//              Intent TransferApp = new Intent(AppContext.getApplicationContext(), MessagingActivity.class);
+//              TransferApp.addFlags(FLAG_ACTIVITY_NEW_TASK); // must be added else you can't start activity from non-activity.
+//              TransferApp.putExtra("Token", mAdapter.Token_bear);
+//              TransferApp.putExtra("Nickname", item_chatname.getText().toString());
+//              TransferApp.putExtra("UserName", UserName);
+//              TransferApp.putExtra("HostUser", UserNameHost);
+//              TransferApp.putExtra("Server", Server);
+//              AppContext.getApplicationContext().startActivity(TransferApp);
+          }
+          else {
 
+              App.UserChoosen = UserName;
+              App.NickNameChoose = item_chatname.getText().toString();
+              App.ServerChosen = Server;
+              App.imgContact = ((BitmapDrawable)img.getDrawable()).getBitmap();
+              App.getSupportFragmentManager().beginTransaction()
+                      .setReorderingAllowed(true)
+                      .replace(R.id.fragment_container_view, MessagingFragment.class, null)
+                      .commit();
+
+          }
         }
     }
 
