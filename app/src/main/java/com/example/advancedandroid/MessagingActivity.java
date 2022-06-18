@@ -1,5 +1,6 @@
 package com.example.advancedandroid;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -56,212 +57,212 @@ public class MessagingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messaging);
 
-        setReceiver(); // this is setting the receiver that will get the intent from firebase.
-
-        // this is registering the intent
-            LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver((NotificationGetter),
-                    new IntentFilter(FireBaseService.REQUEST_RECEIVE)
-            );
-
-
-
-        intent = getIntent();
-        Token_bear = intent.getStringExtra("Token");
-        Nickname = intent.getStringExtra("Nickname");
-        UserNameContact = intent.getStringExtra("UserName");
-        HostUserName = intent.getStringExtra("HostUser");
-        ContactServer = intent.getStringExtra("Server");
-
-         String notification = intent.getStringExtra("message");
-         if( notification!=null) {
-             getMessages(Token_bear, UserNameContact, 1);
-             finish();
-
-         }
+//        setReceiver(); // this is setting the receiver that will get the intent from firebase.
+//
+//        // this is registering the intent
+//            LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver((NotificationGetter),
+//                    new IntentFilter(FireBaseService.REQUEST_RECEIVE)
+//            );
 
 
+//
+//        intent = getIntent();
+//        Token_bear = intent.getStringExtra("Token");
+//        Nickname = intent.getStringExtra("Nickname");
+//        UserNameContact = intent.getStringExtra("UserName");
+//        HostUserName = intent.getStringExtra("HostUser");
+//        ContactServer = intent.getStringExtra("Server");
+//
+//         String notification = intent.getStringExtra("message");
+//         if( notification!=null) {
+//             getMessages(Token_bear, UserNameContact, 1);
+//             finish();
+//
+//         }
 
-        views = new View[]{findViewById(R.id.receiver_name), findViewById(R.id.profile_pic_imageview), findViewById(R.id.msg_recyclerview)};
-        TextView name = (TextView) views[0];
-        name.setText(Nickname);
-        messages = (RecyclerView) views[2];
+//        views = new View[]{findViewById(R.id.receiver_name), findViewById(R.id.profile_pic_imageview), findViewById(R.id.msg_recyclerview)};
+//        TextView name = (TextView) views[0];
+//        name.setText(Nickname);
+//        messages = (RecyclerView) views[2];
 
-        api = RetrofitClient.getInstance().getMyApi();
-
-
-        getMessages(Token_bear, UserNameContact, 0);
-
-
-        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "MessageDB")
-                .allowMainThreadQueries()
-                .build();
-
-
-        messageDao = db.messageDao();
-
-        messagesList = messageDao.index();
-
-
-        RecyclerView rvMessages = findViewById(R.id.msg_recyclerview);
-        messageAdapter = new MessageAdapter(messagesList);
-        rvMessages.setAdapter(messageAdapter);
-        // TODO fix the problem with the line under me
-        //rvMessages.setLayoutManager(new LinearLayoutManager(this));
+//        api = RetrofitClient.getInstance().getMyApi();
+//
+//
+//        getMessages(Token_bear, UserNameContact, 0);
 
 
-    }
-
-    private void setReceiver() {
-
-        NotificationGetter = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                try {
-                    String   value= intent.getStringExtra("message");
-                    getMessages(Token_bear, UserNameContact, 1);
+//        db = Room.databaseBuilder(getApplicationContext(), AppDB.class, "MessageDB")
+//                .allowMainThreadQueries()
+//                .build();
 
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        };
-    }
+//        messageDao = db.messageDao();
+//
+//        messagesList = messageDao.index();
 
 
-    void getMessages(String Token, String UserNameContact, int flagChanged) {
-
-        Call<List<Message>> call = api.getMessages(Token, UserNameContact);
-        call.enqueue(new Callback<List<Message>>() {
-            @Override
-            public void onResponse(Call<List<Message>> call, Response<List<Message>> response) {
-
-                List<Message> entry = response.body();
-
-                // for now we get all the fields from database.
-                 if(flagChanged == 1) {
-                     MessageList.add(entry.get(entry.size() - 1));
-                     Adapter.notifyItemChanged(MessageList.size() - 1);
-                     messages.scrollToPosition(Adapter.getItemCount()-1);
-                 }
-                 else {
-
-                     List<Message> list = response.body();
-
-                     if(list != null && MessageList!= null) {
-                         if(list.size() > MessageList.size()) {
-                             int size = list.size();
-                             MessageList = response.body();
-                             Adapter.notifyItemRangeChanged(size, MessageList.size() - 1);
-                         }
-                     }
-
-                     MessageList = response.body();
-
-                         if (Adapter == null ) {
-
-                         Adapter = new MessageAdapter(getApplicationContext(), MessageList);
-                         messages.setAdapter(Adapter);
-                         messages.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-                     }
-
-
-
-                 }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Message>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                Log.d("Error222: ", t.toString());
-            }
-
-        });
+//        RecyclerView rvMessages = findViewById(R.id.msg_recyclerview);
+//        messageAdapter = new MessageAdapter(messagesList);
+//        rvMessages.setAdapter(messageAdapter);
+//        // TODO fix the problem with the line under me
+//        //rvMessages.setLayoutManager(new LinearLayoutManager(this));
 
 
     }
 
 
-    public void SendMessage(View view)  {
 
-        TextView f = findViewById(R.id.typing_space);
-          String message = f.getText().toString();
-
-       Call <Void>  call = api.PostMessages(Token_bear, UserNameContact,  message);
-        call.enqueue(new Callback <Void>() {
-            @Override
-            public void onResponse(Call <Void> call, Response <Void> response) {
-
-                f.setText("");
-
-                getMessages(Token_bear, UserNameContact, 1);
-
-               SendTransferRequest(HostUserName , UserNameContact, message, ContactServer);
-
-
-            }
-
-            @Override
-            public void onFailure(Call <Void> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                Log.d("Error222: ", t.toString());
-            }
-
-        });
+//    private void setReceiver() {
+//
+//        NotificationGetter = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                try {
+//                    String   value= intent.getStringExtra("message");
+//                    getMessages(Token_bear, UserNameContact, 1);
+//
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        };
+//    }
 
 
-    }
+//    void getMessages(String Token, String UserNameContact, int flagChanged) {
+//
+//        Call<List<Message>> call = api.getMessages(Token, UserNameContact);
+//        call.enqueue(new Callback<List<Message>>() {
+//            @Override
+//            public void onResponse(Call<List<Message>> call, Response<List<Message>> response) {
+//
+//                List<Message> entry = response.body();
+//
+//                // for now we get all the fields from database.
+//                 if(flagChanged == 1) {
+//                     MessageList.add(entry.get(entry.size() - 1));
+//                     Adapter.notifyItemChanged(MessageList.size() - 1);
+//                     messages.scrollToPosition(Adapter.getItemCount()-1);
+//                 }
+//                 else {
+//
+//                     List<Message> list = response.body();
+//
+//                     if(list != null && MessageList!= null) {
+//                         if(list.size() > MessageList.size()) {
+//                             int size = list.size();
+//                             MessageList = response.body();
+//                             Adapter.notifyItemRangeChanged(size, MessageList.size() - 1);
+//                         }
+//                     }
+//
+//                     MessageList = response.body();
+//
+//                         if (Adapter == null ) {
+//
+//                         Adapter = new MessageAdapter(getApplicationContext(), MessageList);
+//                         messages.setAdapter(Adapter);
+//                         messages.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+//
+//                     }
+//
+//
+//
+//                 }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Message>> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+//                Log.d("Error222: ", t.toString());
+//            }
+//
+//        });
+//
+//
+//    }
 
 
-    public void SendTransferRequest(String from, String to, String message, String server) {
-
-        String serv = server;
-        Api custom = null;
-
-        if(server.contains("localhost")) {
-            server = server.replace("localhost", "10.0.0.2");
-
-        }
-        // if it is not equal to Base url, we have to create another retrofit object.
-        if(!server.equals("10.0.0.2:7179") ) {
-
-           RetrofitClient.getInstance().AddClient("https://".concat(server).concat("/api/"));
-            custom =  RetrofitClient.getInstance().getCustom_Api();
-
-
-        }
-
-        String arr[] ={ from, to, message};
-        Call<Void> call;
-        // will only enter custom if different server address than user.
-        if( custom != null) {
-            call = custom.SendTransfer(arr);
-        }
-        else {
-            call = api.SendTransfer(arr);
-        }
-
-        call.enqueue(new Callback <Void>() {
-            @Override
-            public void onResponse(Call <Void> call, Response <Void> response) {
-
-              Response k = response;
-
-            }
-
-            @Override
-            public void onFailure(Call <Void> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                Log.d("Error222: ", t.toString());
-            }
-
-        });
-
-
-    }
+//    public void SendMessage(View view)  {
+//
+//        TextView f = findViewById(R.id.typing_space);
+//          String message = f.getText().toString();
+//
+//       Call <Void>  call = api.PostMessages(Token_bear, UserNameContact,  message);
+//        call.enqueue(new Callback <Void>() {
+//            @Override
+//            public void onResponse(Call <Void> call, Response <Void> response) {
+//
+//                f.setText("");
+//
+//                getMessages(Token_bear, UserNameContact, 1);
+//
+//               SendTransferRequest(HostUserName , UserNameContact, message, ContactServer);
+//
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call <Void> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+//                Log.d("Error222: ", t.toString());
+//            }
+//
+//        });
+//
+//
+//    }
+//
+//
+//    public void SendTransferRequest(String from, String to, String message, String server) {
+//
+//        String serv = server;
+//        Api custom = null;
+//
+//        if(server.contains("localhost")) {
+//            server = server.replace("localhost", "10.0.0.2");
+//
+//        }
+//        // if it is not equal to Base url, we have to create another retrofit object.
+//        if(!server.equals("10.0.0.2:7179") ) {
+//
+//           RetrofitClient.getInstance().AddClient("https://".concat(server).concat("/api/"));
+//            custom =  RetrofitClient.getInstance().getCustom_Api();
+//
+//
+//        }
+//
+//        String arr[] ={ from, to, message};
+//        Call<Void> call;
+//        // will only enter custom if different server address than user.
+//        if( custom != null) {
+//            call = custom.SendTransfer(arr);
+//        }
+//        else {
+//            call = api.SendTransfer(arr);
+//        }
+//
+//        call.enqueue(new Callback <Void>() {
+//            @Override
+//            public void onResponse(Call <Void> call, Response <Void> response) {
+//
+//              Response k = response;
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call <Void> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
+//                Log.d("Error222: ", t.toString());
+//            }
+//
+//        });
+//
+//
+//    }
 
     public void Backbtn(View view) {
 

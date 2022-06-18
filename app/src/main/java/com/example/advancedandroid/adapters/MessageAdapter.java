@@ -16,7 +16,7 @@ import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
-    private List<Message> list;
+    public List<Message> list;
     // we can we two different xmls depending on who sent the message.
     private LayoutInflater MessageInflater;
 
