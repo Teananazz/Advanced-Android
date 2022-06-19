@@ -26,11 +26,10 @@
 
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/my_toolbar"
-        android:background="?attr/colorPrimary"
-        >
+        android:background="?attr/colorPrimary">
 
 
         <TextView
@@ -40,7 +39,6 @@
             android:layout_gravity="center_horizontal"
             android:text="Chat App"
             android:textSize="24sp" />
-
 
 
     </androidx.appcompat.widget.Toolbar>
@@ -75,11 +73,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="invisible"
         android:layout_toLeftOf="@+id/move_to_contactlist_fab"
         android:padding="10dp"
         android:text="Your contact list seems to be empty. Click there to add contact --->"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:visibility="invisible" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -97,5 +95,18 @@
 
         />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/settingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="9dp"
+        android:layout_marginBottom="76dp"
+        android:onClick="AddContactTransfer"
 
+        android:src="@drawable/ic_settings" />
 </RelativeLayout>
