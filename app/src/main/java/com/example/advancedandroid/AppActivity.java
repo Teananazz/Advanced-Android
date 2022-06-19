@@ -385,7 +385,7 @@ public class AppActivity extends AppCompatActivity {
 
 
 
-
+                /*
                 int orientation = getResources().getConfiguration().orientation;
                 if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     // In landscape
@@ -397,6 +397,7 @@ public class AppActivity extends AppCompatActivity {
                     RecyclerViewMessages.setAdapter(messageAdapter);
                     RecyclerViewMessages.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 }
+                */
 
             }
 
