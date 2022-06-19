@@ -47,13 +47,6 @@ public class ContactsFragment extends Fragment {
         // super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.contactsfragment, container, false);
         Activity = (AppActivity) getActivity();
-        Button b = view.findViewById(R.id.settingsButton);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(view.getContext(), SettingsActivity.class));
-            }
-        });
         if(Activity != null) {
 
             BearToken = Activity.Token_Bear;

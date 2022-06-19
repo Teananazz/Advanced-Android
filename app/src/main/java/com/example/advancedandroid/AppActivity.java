@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -316,6 +317,14 @@ public class AppActivity extends AppCompatActivity {
                      @Override
                      public void onActivityResult(ActivityResult result) {
 
+
+                         Button b = findViewById(R.id.settingsButton);
+                         b.setOnClickListener(new View.OnClickListener() {
+                             @Override
+                             public void onClick(View v) {
+                                 startActivity(new Intent(v.getContext(), SettingsActivity.class));
+                             }
+                         });
                          // 1 he just returned back and nothing happend.
                          if (result.getResultCode() == 1) {
 
