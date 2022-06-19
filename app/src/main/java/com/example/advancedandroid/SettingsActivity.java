@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -45,6 +47,18 @@ public class SettingsActivity extends Activity {
                 }
             }
         });
+
+        //Button changeServerButton = findViewById(R.id.ChangeServer);
+        //changeServerButton.setOnClickListener(changeServer(changeServerButton));
+    }
+
+    private void reset(){
+        Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void changeServer(View view) {
         api = RetrofitClient.getInstance().getMyApi();
         EditText server = findViewById(R.id.NewServer);
         String str = server.getText().toString();
@@ -61,11 +75,5 @@ public class SettingsActivity extends Activity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(Api.class);
-    }
-
-    private void reset(){
-        Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-        startActivity(intent);
-        finish();
     }
 }
