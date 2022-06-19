@@ -14,7 +14,8 @@
         android:text="Change Server"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="99dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:onClick="changeServer"/>
 
     <EditText
         android:id="@+id/NewServer"
