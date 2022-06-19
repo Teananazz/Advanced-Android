@@ -73,6 +73,9 @@
             android:name=".MessagingActivity"
             android:exported="true" />
 
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="true" />
 
     </application>
 
