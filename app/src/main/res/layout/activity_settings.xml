@@ -8,32 +8,37 @@
 
 
     <Button
-        android:id="@+id/ChangeUsername"
+        android:id="@+id/ChangeServer"
         android:layout_width="385dp"
         android:layout_height="63dp"
-        android:text="@string/change_username"
+        android:text="Change Server"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="99dp"
         tools:ignore="MissingConstraints" />
 
-    <Button
-        android:id="@+id/ChangePassword"
-        android:layout_width="385dp"
-        android:layout_height="63dp"
-        android:text="@string/change_password"
-        app:layout_constraintBottom_toTopOf="@+id/ChangeTheme"
-        app:layout_constraintTop_toBottomOf="@+id/ChangeUsername"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="16dp" />
+    <EditText
+        android:id="@+id/NewServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="New Server"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:textColorHint="#757575"
+        app:layout_constraintBottom_toBottomOf="@+id/ChangeTheme"
+        app:layout_constraintTop_toTopOf="@+id/ChangeServer"
+        tools:layout_editor_absoluteX="0dp" />
 
     <Button
         android:id="@+id/ChangeTheme"
         android:layout_width="385dp"
         android:layout_height="63dp"
-        android:text="@string/change_theme"
+        android:layout_marginTop="108dp"
+        android:text="Change Theme"
+        app:layout_constraintTop_toBottomOf="@+id/ChangeServer"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="264dp" />
+        tools:layout_editor_absoluteX="13dp" />
 
     <TextView
         android:id="@+id/SettingsUsername"
