@@ -87,8 +87,15 @@ public class MessagingFragment extends Fragment implements View.OnClickListener 
        View btn = view.findViewById(R.id.send_msg_btn);
        btn.setOnClickListener(this);
 
-
-
+       View btn2 = view.findViewById(R.id.back_btn);
+       if(Activity.Orientation.equals("PORTRAIT")) {
+           btn2.setVisibility(View.VISIBLE);
+           btn2.setOnClickListener(this);
+       }
+       else {
+           btn2.setVisibility(View.INVISIBLE);
+       }
+       
         MessageDao messageDao = Activity.dbMess.messageDao();
         Activity.RecyclerViewMessages = view.findViewById(R.id.msg_recyclerview);
 
@@ -257,7 +264,19 @@ public class MessagingFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View view) {
 
+        if( view.getId() == R.id.send_msg_btn) {
+
             SendMessage(view);
+        }
+        else if(view.getId() == R.id.back_btn) {
+            if(Activity.Orientation.equals("PORTRAIT")) {
+               Activity.finish();
+
+
+            }
+
+        }
+
 
     }
 }

@@ -28,9 +28,9 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="-14dp"
+            android:contentDescription="UserProfilePicture"
             android:padding="3dp"
             android:src="@drawable/ic_baseline_keyboard_arrow_left_24"
-            android:contentDescription="UserProfilePicture"
 
             />
 
