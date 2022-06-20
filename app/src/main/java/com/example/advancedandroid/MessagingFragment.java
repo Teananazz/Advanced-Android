@@ -95,7 +95,7 @@ public class MessagingFragment extends Fragment implements View.OnClickListener 
        else {
            btn2.setVisibility(View.INVISIBLE);
        }
-       
+
         MessageDao messageDao = Activity.dbMess.messageDao();
         Activity.RecyclerViewMessages = view.findViewById(R.id.msg_recyclerview);
 
@@ -270,9 +270,10 @@ public class MessagingFragment extends Fragment implements View.OnClickListener 
         }
         else if(view.getId() == R.id.back_btn) {
             if(Activity.Orientation.equals("PORTRAIT")) {
-               Activity.finish();
-
-
+               Activity.getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .replace(R.id.fragment_container_view, ContactsFragment.class, null)
+                        .commit();
             }
 
         }
