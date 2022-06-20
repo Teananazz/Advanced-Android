@@ -7,8 +7,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitClient {
     private static RetrofitClient instance = null;
-    private Api myApi;
-    private Api Custom_Api;
+    private static Api myApi;
+    private static Api Custom_Api;
     OkHttpClient okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient();
 
     private RetrofitClient() {
@@ -26,7 +26,7 @@ public class RetrofitClient {
     }
 
     public  void AddClient(String url) {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(Api.BASE_URL_custom).client(okHttpClient)
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(url).client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         Custom_Api = retrofit.create(Api.class);
@@ -37,5 +37,13 @@ public class RetrofitClient {
     }
     public Api getCustom_Api() {
         return Custom_Api;
+    }
+
+    public void changeMain(String url) {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(url).client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        myApi =  retrofit.create(Api.class); // instead of deep copying we just change variables.
+
     }
 }

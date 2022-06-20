@@ -26,7 +26,7 @@ import retrofit2.http.Url;
 public interface Api {
 
     String BASE_URL = "https://10.0.2.2:7179/api/";
-    String BASE_URL_custom= BASE_URL.concat("/api/");
+     String BASE_URL_custom= BASE_URL.concat("/api/");
 
     @GET("Users")
     Call<List<User>> getUsers();

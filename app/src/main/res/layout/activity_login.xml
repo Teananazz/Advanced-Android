@@ -36,7 +36,7 @@
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/password"
-            android:inputType="textPersonName"
+            android:inputType="textPassword"
             android:minHeight="48dp"
             android:textColorHint="#757575" />
 

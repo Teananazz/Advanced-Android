@@ -28,8 +28,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SettingsActivity extends Activity {
-    public Api api;
-    public OkHttpClient okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,26 +46,28 @@ public class SettingsActivity extends Activity {
         });
 
         Button b = findViewById(R.id.back_to_app_button);
-        b.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), AppActivity.class)));
+        b.setOnClickListener(v -> finish());
     }
 
-    public void changeServer(View view) {
-        api = RetrofitClient.getInstance().getMyApi();
+
+    public void changeServBtn(View view) {
+
         EditText server = findViewById(R.id.NewServer);
         String str = server.getText().toString();
+        if(str.contains("localhost")) {
+            str = str.replace("localhost", "10.0.0.2");
+
+        }
         String httpStr = "https://";
         String apiStr = "/api/";
         if (!str.contains(httpStr)) {
             str = httpStr + str;
         }
         if (!str.contains(apiStr)) {
-            str = str + httpStr;
+            str = str + apiStr;
         }
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(str)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        api = retrofit.create(Api.class);
-        finish();
+        RetrofitClient.getInstance().changeMain(str);
+
+
     }
 }

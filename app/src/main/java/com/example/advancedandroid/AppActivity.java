@@ -210,106 +210,8 @@ public class AppActivity extends AppCompatActivity {
         }
 
 
-          //  Current_Contacts = contactDao.index(user);
-       //     if(Current_Contacts == null) {
-       //         Current_Contacts = new ArrayList<Contact>();
-       //  }
-         //   Adapter = new ContactAdapter(getApplicationContext(), Current_Contacts, Token_Bear, user, Users);
-        //    RecyclerView.setAdapter(Adapter);
-          //  RecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-
-
-//
-//            // meanwhile we checking server  in case there was additions.
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    getContacts(Token);
-//                    CheckUserList();
-//                }
-//            });
-//        }
-//        else {
-//            // if no Token then it is not possible to be at appactivity.
-//            finish();
-//        }
         }
 
-
-
-
-
-//    void getContacts(String Token) {
-//
-//        Call<List<Contact>>  call = api.GetContacts(Token_Bear);
-//        call.enqueue(new Callback<List<Contact>>() {
-//            @Override
-//            public void onResponse(Call<List<Contact>> call , Response<List<Contact>> response) {
-//
-//                List<Contact> ServerContacts = response.body();
-//                if(ServerContacts == null ) {
-//                    ServerContacts = new ArrayList<Contact>();
-//                }
-//
-//                 if(ServerContacts.size() > 0) {
-//
-//                    for(int  i = 0 ; i< ServerContacts.size() ; i++) {
-//                        ServerContacts.get(i).setUsernameOfLooker(user);
-//                    }
-//                }
-//
-//                 if(Current_Contacts.isEmpty() && ServerContacts.size() == 1) {
-//                     int size = 0;
-//                     Current_Contacts.add(ServerContacts.get(0));
-//                     Adapter.notifyItemInserted(0);
-//
-//                 }
-//                 // if we just added a contact
-//              else if(ServerContacts.size() == (Current_Contacts.size() + 1) ) {
-//                     int size = Current_Contacts.size();
-//                     int size2 = ServerContacts.size();
-//                     Current_Contacts.add(ServerContacts.get(size2 - 1));
-//                    Adapter.notifyItemInserted(size2 - 1);
-//
-//                }
-//              else {
-//                     // this when we update potentially everyone if they changed info.
-//                     Current_Contacts.clear();
-//                     Current_Contacts.addAll(ServerContacts);
-//                      Adapter.notifyDataSetChanged();
-//                 }
-//
-//               // we use Insert all because replace policy is replace in case details were updated.
-//                if(!Current_Contacts.isEmpty()) {
-//                    db.contactDao().InsertAll(Current_Contacts);
-//                }
-//
-//                if (Current_Contacts.size() > 0 && EmptyIndicator.getVisibility() == View.VISIBLE) {
-//                            EmptyIndicator.setVisibility(View.INVISIBLE);
-//                }
-//
-//                if( Current_Contacts.isEmpty() && EmptyIndicator.getVisibility() == View.INVISIBLE) {
-//                             // if no contacts then we show hint to add contact.
-//                    EmptyIndicator.setVisibility(View.VISIBLE);
-//                }
-//
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Contact>> call, Throwable t) {
-//                Toast.makeText(getApplicationContext(), "An error has occurred", Toast.LENGTH_LONG).show();
-//                Log.d("Error222: ", t.toString());
-//            }
-//
-//        });
-//
-//
-//
-//
-//
-//    }
 
      void DefineLauncher() {
 
@@ -358,9 +260,8 @@ public class AppActivity extends AppCompatActivity {
     public void SettingsTransfer(View view) {
 
         Intent intent = new Intent(this, SettingsActivity.class);
-        intent.putExtra("Token", Token_Bear);
-        intent.putExtra("UserHost", user);
-        Launcher.launch(intent);
+
+        startActivity(intent);
     }
 
 
