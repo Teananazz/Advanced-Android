@@ -29,64 +29,26 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SettingsActivity extends Activity {
     public Api api;
-    OkHttpClient okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient();
+    public OkHttpClient okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        Button dayButton = findViewById(R.id.ChangeThemeDay);
+        Button nightButton = findViewById(R.id.ChangeThemeNight);
+
+        dayButton.setOnClickListener(view -> {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        });
+
+        nightButton.setOnClickListener(view -> {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        });
+
         Button b = findViewById(R.id.back_to_app_button);
         b.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), AppActivity.class)));
-
-        /*
-        @SuppressLint("WrongViewCast") Switch s = findViewById(R.id.ChangeTheme);
-        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (s.isChecked()) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    s.setText("Light Mode");
-                    reset();
-                }
-                else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    s.setText("Dark Mode");
-                    reset();
-                }
-            }
-        });
-        */
-
-    }
-
-
-    private void reset(){
-        Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    public void changeThemeDay(View view) {
-        SetThemeDay(this);
-        finish();
-    }
-
-    public void changeThemeNight(View view) {
-        SetThemeNight(this);
-        finish();
-    }
-
-    public void SetThemeDay(Activity activity)
-    {
-        activity.setTheme(R.style.Theme_AdvancedAndroidDay);
-        this.reset();
-    }
-
-    public void SetThemeNight(Activity activity)
-    {
-        activity.setTheme(R.style.Theme_AdvancedAndroidNight);
-        reset();
     }
 
     public void changeServer(View view) {
