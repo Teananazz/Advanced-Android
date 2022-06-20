@@ -18,16 +18,15 @@
         android:id="@+id/settingsButton"
         android:layout_width="451dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="9dp"
-        android:layout_marginBottom="76dp"
-        android:onClick="AddContactTransfer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/fragment_container_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_settings"
+        android:onClick="SettingsTransfer"
+        android:contentDescription="settings button"/>
 
-        android:src="@drawable/ic_settings" />
 
     <androidx.fragment.app.FragmentContainerView
 
@@ -36,7 +35,8 @@
         android:layout_height="match_parent"
 
 
-        >
+        android:name="com.example.advancedandroid.ContactsFragment"
+        tools:layout="@layout/contactsfragment">
 
 
     </androidx.fragment.app.FragmentContainerView>

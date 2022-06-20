@@ -40,6 +40,7 @@ import com.example.advancedandroid.room.MessageDao;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
@@ -109,6 +110,7 @@ public class AppActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_appscreen);
+
 
         api = RetrofitClient.getInstance().getMyApi();
 
@@ -318,13 +320,6 @@ public class AppActivity extends AppCompatActivity {
                      public void onActivityResult(ActivityResult result) {
 
 
-                         Button b = findViewById(R.id.settingsButton);
-                         b.setOnClickListener(new View.OnClickListener() {
-                             @Override
-                             public void onClick(View v) {
-                                 startActivity(new Intent(v.getContext(), SettingsActivity.class));
-                             }
-                         });
                          // 1 he just returned back and nothing happend.
                          if (result.getResultCode() == 1) {
 
@@ -354,10 +349,18 @@ public class AppActivity extends AppCompatActivity {
 
     public void AddContactTransfer(View view) {
 
-            Intent intent = new Intent(this, AddContactActivity.class);
+        Intent intent = new Intent(this, AddContactActivity.class);
         intent.putExtra("Token", Token_Bear);
         intent.putExtra("UserHost", user);
-            Launcher.launch(intent);
+        Launcher.launch(intent);
+    }
+
+    public void SettingsTransfer(View view) {
+
+        Intent intent = new Intent(this, SettingsActivity.class);
+        intent.putExtra("Token", Token_Bear);
+        intent.putExtra("UserHost", user);
+        Launcher.launch(intent);
     }
 
 

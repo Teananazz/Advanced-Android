@@ -7,55 +7,64 @@
     tools:context=".SettingsActivity">
 
 
-    <Button
-        android:id="@+id/ChangeServer"
-        android:layout_width="385dp"
-        android:layout_height="63dp"
-        android:text="Change Server"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="99dp"
-        tools:ignore="MissingConstraints"
-        android:onClick="changeServer"/>
-
-    <EditText
-        android:id="@+id/NewServer"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="New Server"
-        android:inputType="text"
-        android:minHeight="48dp"
-        android:textColorHint="#757575"
-        app:layout_constraintBottom_toBottomOf="@+id/ChangeTheme"
-        app:layout_constraintTop_toTopOf="@+id/ChangeServer"
-        tools:layout_editor_absoluteX="0dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/ChangeTheme"
-        android:layout_width="385dp"
-        android:layout_height="63dp"
-        android:layout_marginTop="108dp"
-        android:text="Change Theme"
-        app:layout_constraintTop_toBottomOf="@+id/ChangeServer"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="13dp" />
+        <EditText
+            android:id="@+id/NewServer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="New Server"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:textColorHint="#757575" />
 
-    <TextView
-        android:id="@+id/SettingsUsername"
-        android:layout_width="90dp"
-        android:layout_height="40dp"
-        android:text=""
-        tools:layout_editor_absoluteX="104dp"
-        tools:layout_editor_absoluteY="30dp"
-        tools:ignore="MissingConstraints" />
+        <Button
+            android:id="@+id/ChangeServer"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:onClick="changeServer"
+            android:text="Change Server"
+            tools:ignore="MissingConstraints" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="64dp"
-        android:layout_height="69dp"
-        tools:layout_editor_absoluteX="28dp"
-        tools:layout_editor_absoluteY="16dp"
-        tools:srcCompat="@tools:sample/avatars"
-        tools:ignore="MissingConstraints" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/ChangeThemeDay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:onClick="changeThemeDay"
+                android:text="Day Theme" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/ChangeThemeNight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:onClick="changeThemeNight"
+                android:text="Night Theme" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/back_to_app_button"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:text="Button" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

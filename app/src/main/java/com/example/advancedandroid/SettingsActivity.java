@@ -4,7 +4,9 @@ import static com.example.advancedandroid.api.Api.BASE_URL;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +20,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.example.advancedandroid.api.Api;
 import com.example.advancedandroid.api.RetrofitClient;
 import com.example.advancedandroid.api.UnsafeOkHttpClient;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.installations.Utils;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -31,6 +35,11 @@ public class SettingsActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        Button b = findViewById(R.id.back_to_app_button);
+        b.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), AppActivity.class)));
+
+        /*
         @SuppressLint("WrongViewCast") Switch s = findViewById(R.id.ChangeTheme);
         s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -47,15 +56,37 @@ public class SettingsActivity extends Activity {
                 }
             }
         });
+        */
 
-        //Button changeServerButton = findViewById(R.id.ChangeServer);
-        //changeServerButton.setOnClickListener(changeServer(changeServerButton));
     }
+
 
     private void reset(){
         Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void changeThemeDay(View view) {
+        SetThemeDay(this);
+        finish();
+    }
+
+    public void changeThemeNight(View view) {
+        SetThemeNight(this);
+        finish();
+    }
+
+    public void SetThemeDay(Activity activity)
+    {
+        activity.setTheme(R.style.Theme_AdvancedAndroidDay);
+        this.reset();
+    }
+
+    public void SetThemeNight(Activity activity)
+    {
+        activity.setTheme(R.style.Theme_AdvancedAndroidNight);
+        reset();
     }
 
     public void changeServer(View view) {
@@ -75,5 +106,6 @@ public class SettingsActivity extends Activity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(Api.class);
+        finish();
     }
 }
