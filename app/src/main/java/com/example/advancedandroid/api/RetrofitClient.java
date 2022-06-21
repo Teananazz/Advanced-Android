@@ -9,10 +9,11 @@ public class RetrofitClient {
     private static RetrofitClient instance = null;
     private static Api myApi;
     private static Api Custom_Api;
+    private static String BASE_URL="https://10.0.2.2:7179/api/";;
     OkHttpClient okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient();
 
     private RetrofitClient() {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(Api.BASE_URL).client(okHttpClient)
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         myApi = retrofit.create(Api.class);
@@ -44,6 +45,6 @@ public class RetrofitClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         myApi =  retrofit.create(Api.class); // instead of deep copying we just change variables.
-
+        BASE_URL = url;
     }
 }
