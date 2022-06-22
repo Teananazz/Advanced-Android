@@ -8,6 +8,10 @@ Running guide:
 4. img should be not be weighting more than 300kb( not tested more than that - but crashing at 1.2Mb)
 
 got permission from Yotam to add this to the document:
+![image](https://user-images.githubusercontent.com/71297464/175073255-e1ae9995-80a3-450d-a799-55fb3ee83e5a.png)
+
+
+
 
 we put the server changing button after the login, as the consequence of this after you change server fire base will not work almost certainly.
 Therfore, if you want to change server, change manually BASE_URL in RetrofitClient.java and restart and run the app again from the beginning.
